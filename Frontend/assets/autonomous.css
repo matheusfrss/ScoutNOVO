@@ -1,0 +1,126 @@
+/* autonomous.css — versão limpa (sem resumo/export) */
+/* Apenas estilos específicos da página Autônoma, sobrescreverá regras necessárias */
+
+/* Mantém fundo Federal Force */
+body {
+  background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
+}
+
+/* Layout principal */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* Form card largura controlada em telas grandes */
+.form-card {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Títulos */
+.card-title {
+  color: var(--blue-2);
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+/* Toggle SIM/NÃO */
+.auto-toggle {
+  display: flex;
+  gap: 12px;
+}
+
+.auto-btn {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--silver);
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform .12s ease, background .12s ease;
+}
+
+.auto-btn:hover { transform: translateY(-2px); }
+
+.auto-btn.active {
+  background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+  border-color: transparent;
+  color: #02101f;
+  transform: translateY(-2px);
+}
+
+/* Inputs */
+input[type="number"] {
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(120,170,255,0.18);
+  padding: 12px 14px;
+  color: var(--accent-text);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="number"]::placeholder {
+  color: rgba(255,255,255,0.28);
+}
+
+/* Botão primário */
+.btn.primary {
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+  color: #02101f;
+  border: none;
+  font-weight: 700;
+}
+
+/* Toast minimal */
+.toast { position: fixed; right: 20px; bottom: 20px; z-index: 9999; pointer-events: none; }
+.toast .item {
+  background: rgba(10,20,36,0.95);
+  color: #eaf6ff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+  pointer-events: auto;
+}
+
+/* Responsivo */
+@media (min-width: 980px) {
+  .main-grid { grid-template-columns: 1fr 380px; } /* mantém espaço lateral se quiser adicionar algo depois */
+  .form-card { margin: 0; }
+}
+
+
+/* Centralizar conteúdo geral */
+.form-card {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Centralizar labels */
+.label {
+  text-align: left; /* inputs ficam alinhados, mas dentro do card central */
+}
+
+/* Centralizar grupo SIM/NÃO */
+.auto-toggle {
+  justify-content: center;
+}
+
+/* Inputs — centralizar dentro do card */
+.field {
+  text-align: left;
+}
+
+/* Remover placeholder container vazio no grid */
+.main-grid {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}

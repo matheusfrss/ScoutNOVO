@@ -1,0 +1,330 @@
+/* Paleta profissional Federal Force */
+:root{
+  --bg1:#03061a;   /* topo */
+  --bg2:#071635;   /* base */
+  --blue-1:#2fa8ff;
+  --blue-2:#8fe0ff;
+  --silver:#dceaf7;
+  --muted:#9fb3ca;
+  --panel-bg:rgba(255,255,255,0.02);
+  --border:rgba(255,255,255,0.05);
+  --accent:#eaf6ff;
+  --radius:14px;
+}
+
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:Inter,system-ui}
+
+/* deixa o texto do botão Blue azul */
+#blueAlliance,
+.all-btn.blue {
+color: #007bff;
+justify-content: center;
+}
+
+#redAlliance,
+.all-btn.red {
+  color: red; /* texto */
+}
+
+/* Fundo azul Federal Force — FIXADO */
+body{
+  min-height:100vh;
+  background:linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 80%);
+  color:var(--accent);
+  overflow-x:hidden;
+}
+
+
+/* Remove sombras mas mantém backgrounds necessários */
+*, *::before, *::after{
+  box-shadow:none !important;
+  filter:none !important;
+}
+
+/* Remover watermark */
+.app::before{
+  display:none !important;
+  content:none !important;
+}
+
+/* Layout */
+.app{
+  max-width:1180px;
+  margin:20px auto;
+  padding:18px;
+  min-height:100vh;
+}
+
+/* Header */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.logo{
+  width:72px;height:72px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--panel-bg);
+  padding:6px;
+}
+
+.team{
+  font-size:22px;
+  color:var(--blue-2);
+  font-weight:800;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* Botões */
+.btn{
+  padding:8px 14px;
+  border-radius:10px;
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--silver);
+  font-weight:600;
+  cursor:pointer;
+}
+
+.btn.primary{
+  background:linear-gradient(180deg,var(--blue-1),var(--blue-2));
+  color:#001020;
+  border:none;
+}
+
+/* Grid principal */
+.main-grid{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:22px;
+}
+
+.card{
+  background:var(--panel-bg);
+  padding:18px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+}
+
+.card-title{
+  font-size:18px;
+  color:var(--blue-2);
+  font-weight:800;
+  margin-bottom:16px;
+}
+
+/* Formulário */
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:12px;
+}
+
+.grid-1{
+  margin-bottom:14px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.label{
+  font-size:13px;
+  font-weight:700;
+  color:var(--muted);
+}
+
+/* INPUTS */
+input{
+  background:rgba(255,255,255,0.03);
+  border-radius:10px;
+  border:1px solid rgba(120,170,255,0.2);
+  padding:12px 14px;
+  font-size:15px;
+  color:var(--accent);
+  outline:none;
+  transition:border .15s, box-shadow .2s;
+}
+
+input::placeholder{
+  color:rgba(255,255,255,0.28);
+}
+
+input:focus{
+  border-color:var(--blue-2);
+  box-shadow:0 0 12px rgba(47,168,255,0.5);
+}
+
+/* Controls right */
+.panel-column{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.control-card{
+  padding:16px;
+}
+
+/* Segmented control */
+.seg{
+  display:flex;
+  gap:10px;
+}
+
+.seg-btn{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.06);
+  color:var(--silver);
+  font-weight:700;
+}
+
+.seg-btn.active{
+  background:rgba(47,168,255,0.12);
+  border-color:rgba(47,168,255,0.3);
+}
+
+/* Alliance */
+.alliance{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.all-btn{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.06);
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.all-btn .dot{
+  width:12px;height:12px;border-radius:50%;
+}
+
+.all-btn.blue .dot{background:#3aa3ff;}
+.all-btn.red .dot{background:#ff4d4d;}
+
+.all-btn[aria-pressed="true"]{
+  outline:2px solid rgba(47,168,255,0.4);
+}
+
+/* VS */
+.vs{
+  font-weight:900;
+  color:var(--muted);
+}
+
+/* Position */
+.pos{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.pos-btn{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.06);
+  background:transparent;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.pos-btn.active{
+  background:rgba(47,168,255,0.14);
+  outline:2px solid rgba(47,168,255,0.3);
+}
+
+/* Footer */
+.footer{
+  text-align:center;
+  padding:20px 0;
+  margin-top:30px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* Mobile */
+@media(max-width:980px){
+  .main-grid{
+    grid-template-columns:1fr;
+  }
+  .logo{width:56px;height:56px;}
+}
+
+/* --------------------------
+   Patch anti-overlay / anti-tarja
+   Cole no FINAL do styles.css
+   -------------------------- */
+
+/* garante o fundo azul principal */
+html, body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(180deg, #03061a 0%, #071635 80%) !important;
+  overflow-x: hidden;
+}
+
+/* remove qualquer overlay fixo/absoluto com fundo escuro */
+[style*="position:fixed"],
+[style*="position:absolute"],
+[style*="position:sticky"] {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* remove imagens de background/pseudo entre camadas */
+*,
+*::before,
+*::after {
+  background-image: none !important;
+  background-color: inherit !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* garante que os containers principais tenham o fundo azul (e não transparência que sombream) */
+.app, .main-grid, .card, .panel-column, .panel, footer, .footer {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+/* se algum elemento estiver cobrindo a área inferior, reduz sua visibilidade */
+body > *[role="overlay"], .overlay, .backdrop, .dark-strip {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
