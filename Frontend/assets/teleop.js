@@ -8,15 +8,6 @@
 
   const KEY = "ff_teleop_data_v1";
 
-  // salva automaticamente ao digitar
-  function save(){
-    const entry = {
-      idadeMedia: Number(qtyAge.value || 0),
-      preHistoricos: Number(qtyPre.value || 0),
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(KEY, JSON.stringify(entry));
-  }
 
   qtyAge.addEventListener("input", save);
   qtyPre.addEventListener("input", save);
@@ -33,3 +24,4 @@
   nextBtn.onclick = ()=> location.href = "endgame.html"; // próxima página
 
 })();
+
