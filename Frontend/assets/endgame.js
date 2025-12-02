@@ -1,10 +1,4 @@
-/* script_endgame.js
-   - Toggle SIM/NÃO groups for three questions
-   - Textarea for penalties
-   - Select for strategy (defesa/ataque)
-   - Auto-save to localStorage on change
-   - Navigation back / finish
-*/
+
 
 (function(){
   const pitYes = document.getElementById('pitYes');
@@ -80,7 +74,6 @@
     setTimeout(()=> window.location.href = 'index.html', 700);
   });
 
-  // preload saved values (if any)
   (function load(){
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
     if(!saved) return;
@@ -98,3 +91,4 @@
   })();
 
 })();
+
