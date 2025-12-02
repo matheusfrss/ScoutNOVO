@@ -1,4 +1,3 @@
-/* script_autonomous.js — sem resumo/export, só salva e navega */
 
 (function(){
   const saveBtn = document.getElementById("saveAuto");
@@ -61,7 +60,7 @@
     window.location.href = "teleop.html";
   });
 
-  // pré-carrega valores salvos (se houver) — opcional, sem mostrar resumo
+  // pré-carrega valores salvos 
   const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
   if(saved){
     if(saved.crossed === "sim") setToggle(yesBtn);
@@ -71,3 +70,4 @@
   }
 
 })();
+
