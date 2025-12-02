@@ -1,7 +1,4 @@
-/* autonomous.css — versão limpa (sem resumo/export) */
-/* Apenas estilos específicos da página Autônoma, sobrescreverá regras necessárias */
 
-/* Mantém fundo Federal Force */
 body {
   background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
 }
@@ -124,3 +121,4 @@ input[type="number"]::placeholder {
   grid-template-columns: 1fr;
   justify-items: center;
 }
+
