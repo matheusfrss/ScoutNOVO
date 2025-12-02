@@ -1,6 +1,4 @@
-/* endgame.css — estilo limpo, centralizado e coerente com o tema */
 
-/* mantém o fundo Federal Force */
 body{
   background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
   color: var(--accent-text);
@@ -95,3 +93,4 @@ textarea{
   .form-card{ padding: 16px; }
   .toggle-row{ flex-direction: row; }
 }
+
