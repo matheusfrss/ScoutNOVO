@@ -1,12 +1,4 @@
-/* Interações:
-   - controles segmentados
-   - aliança exclusiva
-   - pos-btn group
-   - salvar em localStorage
-   - export CSV
-   - visual toast
-   (removido quickNote/limpar/hint conforme solicitado)
-*/
+
 (function(){
   const segBtns = document.querySelectorAll('.seg-btn');
   const posBtns = document.querySelectorAll('.pos-btn');
@@ -105,7 +97,7 @@
     toast('Exportado CSV');
   });
 
-  // Records button: copia JSON para clipboard e mostra quantidade
+
   recordsBtn?.addEventListener('click', ()=>{
     const all = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     if(!all.length){ toast('Sem registros'); return; }
@@ -118,3 +110,4 @@
   });
 
 })();
+
