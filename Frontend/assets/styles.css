@@ -1,4 +1,4 @@
-/* Paleta profissional Federal Force */
+
 :root{
   --bg1:#03061a;   /* topo */
   --bg2:#071635;   /* base */
@@ -328,3 +328,4 @@ body > *[role="overlay"], .overlay, .backdrop, .dark-strip {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
