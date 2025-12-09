@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Autônoma — Federal Force Scout</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="autonomous.css">
+</head>
+<body>
+
+<main class="app">
+  <header class="header">
+    <div class="brand">
+      <img src="./federal.jpeg" class="logo" alt="Federal Force">
+      <div>
+        <h1 class="team">FEDERAL FORCE</h1>
+        <p class="sub">Scout FASE — Autônoma</p>
+      </div>
+    </div>
+
+    <div class="meta-actions">
+    <button id="backBtn" class="btn ghost" type="button" onclick="window.location.href='index.html'">Anterior</button>
+    <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='teleop.html'">Próximo</button>
+    </div>
+  </header>
+
+  <section class="main-grid">
+    <form id="autoForm" class="card form-card" autocomplete="off" novalidate>
+      <h2 class="card-title">Fase Autônoma</h2>
+
+      <div class="grid-1">
+        <label class="label">O robô ultrapassou a linha de chegada?</label>
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="crossYes" type="button" class="auto-btn">SIM</button>
+          <button id="crossNo" type="button" class="auto-btn">NÃO</button>
+        </div>
+      </div>
+
+      <div class="grid-1">
+        <label class="field">
+          <span class="label">Quant. artefatos (idade média) entregues no MUSEU</span>
+          <input id="qtyAge" type="number" min="0" step="1" placeholder="0">
+        </label>
+      </div>
+
+      <div class="grid-1">
+        <label class="field">
+          <span class="label">Quant. artefatos (pré-históricos) entregues no MUSEU</span>
+          <input id="qtyPre" type="number" min="0" step="1" placeholder="0">
+        </label>
+      </div>
+    </form>
+
+  </section>
+
+  <footer class="footer">
+    <small>Federal Force — Autônoma</small>
+  </footer>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="./autonomous.js"></script>
+</body>
+</html>
