@@ -65,29 +65,7 @@
     backBtn.addEventListener('click', ()=> saveDraft(true));
   }
 
-  // salva no unload por segurança
   window.addEventListener('beforeunload', ()=> saveDraft(true));
-
-  // preenche ao carregar
   loadDraft();
-
-  // se quiser enviar direto ao backend daqui, descomente e adapte:
-  /*
-  async function sendToBackend(){
-    const payload = {
-      // você decide o que enviar agora: normalmente juntamos draft.auto+teleop+endgame no final
-      qty_age_tele: parseInt(qtyAge.value || 0, 10),
-      qty_pre_tele: parseInt(qtyPre.value || 0, 10)
-    };
-    try {
-      const res = await fetch('http://127.0.0.1:8000/api/respostas', {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-      });
-      const json = await res.json().catch(()=>({}));
-      if(!res.ok) console.warn('Erro ao enviar teleop:', res.status, json);
-      else console.log('Teleop enviado:', json);
-    } catch(e){ console.warn('Network error teleop send:', e); }
-  }
-  */
 
 })();

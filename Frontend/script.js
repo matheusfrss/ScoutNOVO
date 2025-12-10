@@ -227,8 +227,10 @@
       console.log(all);
     });
   });
-  
+
+  // ===== init: garante acessibilidade visual se já tiver dados selecionados =====
   (function initMarks(){
-  })();
+    
+    })();
 
 })();

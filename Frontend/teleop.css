@@ -1,0 +1,40 @@
+body {
+  background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 22px;
+}
+
+.form-card {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.card-title {
+  color: var(--blue-2);
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.field {
+  text-align: left;
+}
+
+input[type="number"] {
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(120,170,255,0.18);
+  padding: 12px 14px;
+  color: var(--accent-text);
+  width: 100%;
+}
+
+input::placeholder {
+  color: rgba(255,255,255,0.28);
+}
