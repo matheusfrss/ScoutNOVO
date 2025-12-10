@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teleoperada — Federal Force Scout</title>
+
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./teleop.css">
+</head>
+<body>
+
+<main class="app">
+
+  <header class="header">
+    <div class="brand">
+      <img src="./federal.jpeg" class="logo" alt="Federal Force">
+      <div>
+        <h1 class="team">FEDERAL FORCE</h1>
+        <p class="sub">Scout FASE — Teleoperada</p>
+      </div>
+    </div>
+
+    <div class="meta-actions">
+      <button id="backBtn" class="btn ghost" type="button" onclick="window.location.href='auto.html'">Anterior</button>
+      <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='endgame.html'">Próximo</button>
+    </div>
+  </header>
+
+  <section class="main-grid">
+    <form id="teleopForm" class="card form-card" autocomplete="off">
+      <h2 class="card-title">Fase Teleoperada</h2>
+
+      <div class="grid-1">
+        <label class="field">
+          <span class="label">Quant. artefatos (idade média) entregues no MUSEU</span>
+          <input id="qtyAgeTele" type="number" min="0" step="1" placeholder="0">
+        </label>
+      </div>
+
+      <div class="grid-1">
+        <label class="field">
+          <span class="label">Quant. artefatos (pré-históricos) entregues no MUSEU</span>
+          <input id="qtyPreTele" type="number" min="0" step="1" placeholder="0">
+        </label>
+      </div>
+
+    </form>
+  </section>
+
+  <footer class="footer">
+    <small>Federal Force — RD Scout • Teleoperada</small>
+  </footer>
+
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="./teleop.js"></script>
+</body>
+</html>
