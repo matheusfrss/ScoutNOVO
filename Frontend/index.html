@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Federal Force</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="./assets/styles.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="app">
@@ -19,9 +18,9 @@
         </div>
       </div>
 
-    <div class="meta-actions">
-      <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='autonomous.html'">Próximo</button>
-    </div>
+      <div class="meta-actions">
+        <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='autonomous.html'">Próximo</button>
+      </div>
     </header>
 
     <section class="main-grid">
@@ -31,21 +30,22 @@
         <div class="grid-2">
           <label class="field">
             <span class="label">Scouter</span>
-            <input id="scouter" name="scouter" placeholder="Nome do scouter" />
+            <input id="scouter" name="scouter" type="text" placeholder="Nome do scouter" />
           </label>
 
           <label class="field">
             <span class="label">Nº Partida</span>
-            <input id="matchNumber" name="matchNumber" placeholder="000" inputmode="numeric" />
+            <input id="matchNumber" name="matchNumber" type="number" min="1" placeholder="000" inputmode="numeric" />
           </label>
         </div>
 
         <div class="grid-1">
           <label class="field">
             <span class="label">Nº Time</span>
-            <input id="teamNumber" name="teamNumber" placeholder="10466" inputmode="numeric" />
+            <input id="teamNumber" name="teamNumber" type="number" min="1" placeholder="10466" inputmode="numeric" />
           </label>
         </div>
+
         <div class="row actions">
           <button type="button" id="saveBtn" class="btn primary">Salvar</button>
           <div class="spacer"></div>
@@ -56,9 +56,9 @@
         <div class="card control-card">
           <h3 class="card-title">Tipo de partida</h3>
           <div class="seg" role="tablist">
-            <button class="seg-btn" data-type="practices" type="button">PLAYOFFS</button>
+            <button class="seg-btn" data-type="playoffs" type="button">PLAYOFFS</button>
             <button class="seg-btn" data-type="qualifications" type="button">QUALIF</button>
-            <button class="seg-btn" data-type="playoffs" type="button">TREINO</button>
+            <button class="seg-btn" data-type="practice" type="button">TREINO</button>
             <button class="seg-btn" data-type="finals" type="button">FINAIS</button>
           </div>
         </div>
@@ -71,7 +71,6 @@
             <button id="redAlliance" class="all-btn red" aria-pressed="false" type="button"><span class="dot"></span> Red</button>
           </div>
         </div>
-
 
         <div class="card control-card">
           <h3 class="card-title">Posição inicial</h3>
