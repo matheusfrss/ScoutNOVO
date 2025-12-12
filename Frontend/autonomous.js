@@ -1,5 +1,8 @@
-// autonomous.js
+// autonomous.js (substituir todo o arquivo)
 (function(){
+  'use strict';
+
+  // elementos
   const crossYes = document.getElementById('crossYes');
   const crossNo = document.getElementById('crossNo');
   const qtyAge = document.getElementById('qtyAge');
@@ -9,19 +12,26 @@
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
 
-  const DRAFT_KEY = 'ff_rd_scout_draft'; // session/local draft to combine across pages
+  // funções de draft (fornecidas por draft-utils.js)
+  // readDraft, writeDraft, saveSection, loadSection, clearDraft
+  if(typeof saveSection !== 'function' || typeof loadSection !== 'function'){
+    console.warn('[autonomous] draft-utils não encontrados. Garanta <script src="./draft-utils.js"></script> antes deste script.');
+  }
 
-  // simple toast (uses same style as main)
-  function showToast(msg, ms = 1400){
-    if (!toastEl) { console.log('TOAST:', msg); return; }
+  // toast simples (reaproveita seu elemento #toast)
+  function showToast(msg, ms = 1300){
+    if(!toastEl){
+      console.log('TOAST:', msg);
+      return;
+    }
     toastEl.textContent = msg;
     toastEl.classList.add('show');
     setTimeout(()=> toastEl.classList.remove('show'), ms);
   }
 
-  // visual helper
+  // helper visual para marcar SIM/NÃO
   function setCrossed(val){
-    if(val){
+    if(val === true){
       crossYes.classList.add('selected');
       crossNo.classList.remove('selected');
       crossYes.setAttribute('aria-pressed','true');
@@ -32,7 +42,6 @@
       crossNo.setAttribute('aria-pressed','true');
       crossYes.setAttribute('aria-pressed','false');
     } else {
-      // unset
       crossYes.classList.remove('selected');
       crossNo.classList.remove('selected');
       crossYes.setAttribute('aria-pressed','false');
@@ -40,71 +49,91 @@
     }
   }
 
-  // load draft (if exists) and prefill
-  function loadDraft(){
+  // preenche UI a partir do draft salvo (chave: 'auto')
+  function loadFromDraft(){
+    if(typeof loadSection !== 'function') return;
     try {
-      const raw = sessionStorage.getItem(DRAFT_KEY) || localStorage.getItem(DRAFT_KEY);
-      if(!raw) return;
-      const draft = JSON.parse(raw);
-      if(typeof draft.auto !== 'undefined'){
-        const a = draft.auto;
-        if(typeof a.crossed === 'boolean') setCrossed(a.crossed);
-        if(typeof a.qtyAge !== 'undefined') qtyAge.value = a.qtyAge;
-        if(typeof a.qtyPre !== 'undefined') qtyPre.value = a.qtyPre;
-      }
+      const a = loadSection('auto');
+      if(!a) return;
+      if(typeof a.crossed === 'boolean') setCrossed(a.crossed);
+      if(typeof a.qtyAge !== 'undefined' && qtyAge) qtyAge.value = a.qtyAge ?? '';
+      if(typeof a.qtyPre !== 'undefined' && qtyPre) qtyPre.value = a.qtyPre ?? '';
+      console.debug('[autonomous] carregado draft auto:', a);
     } catch(e){
-      console.warn('Erro lendo draft:', e);
+      console.warn('[autonomous] erro loadFromDraft', e);
     }
   }
 
-  // collect values and store draft
-  function saveDraft(saveToSession = true){
+  // coleta valores e salva com saveSection('auto', obj)
+  function saveDraft(){
+    if(typeof saveSection !== 'function'){
+      console.warn('[autonomous] saveSection indisponível');
+      return null;
+    }
     try {
-      const rawLocal = sessionStorage.getItem(DRAFT_KEY) || localStorage.getItem(DRAFT_KEY);
-      let draft = rawLocal ? JSON.parse(rawLocal) : {};
-      draft.auto = {
-        crossed: crossYes.getAttribute('aria-pressed') === 'true' ? true :
-                 (crossNo.getAttribute('aria-pressed') === 'true' ? false : null),
-        qtyAge: qtyAge.value ? parseInt(qtyAge.value, 10) : 0,
-        qtyPre: qtyPre.value ? parseInt(qtyPre.value, 10) : 0,
+      const obj = {
+        crossed: crossYes?.getAttribute('aria-pressed') === 'true' ? true :
+                 (crossNo?.getAttribute('aria-pressed') === 'true' ? false : null),
+        qtyAge: qtyAge && qtyAge.value ? parseInt(qtyAge.value, 10) : 0,
+        qtyPre: qtyPre && qtyPre.value ? parseInt(qtyPre.value, 10) : 0,
         savedAt: new Date().toISOString()
       };
-      const targetStorage = saveToSession ? sessionStorage : localStorage;
-      targetStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-      showToast('Autônoma salva');
+      const draft = saveSection('auto', obj);
+      console.debug('[autonomous] salvo draft auto:', obj);
+      showToast('Autônoma salva', 900);
       return draft;
-    } catch(e){
-      console.error('Erro salvando draft:', e);
-      showToast('Erro ao salvar rascunho');
+    } catch (e) {
+      console.error('[autonomous] erro salvando draft', e);
+      showToast('Erro ao salvar rascunho', 1000);
       return null;
     }
   }
 
-  // event bindings
-  crossYes?.addEventListener('click', ()=> setCrossed(true));
-  crossNo?.addEventListener('click', ()=> setCrossed(false));
+  // eventos
+  crossYes?.addEventListener('click', ()=> {
+    setCrossed(true);
+  });
+  crossNo?.addEventListener('click', ()=> {
+    setCrossed(false);
+  });
 
-  // intercept next: save draft then allow navigation
+  // quando clicar Próximo: salva e navega
   if(nextBtn){
-    nextBtn.addEventListener('click', (ev)=>{
-      // save to session so next pages can read
-      saveDraft(true);
-      // navigation is via inline onclick in HTML; we keep it (no preventDefault)
-      // small delay to ensure sessionStorage write completes before navigation
-      // but keep it tiny so UX is instant
-      // (if the HTML already navigates immediately, this still runs before navigation)
+    nextBtn.addEventListener('click', (ev) => {
+      // salva no sessionStorage
+      saveDraft();
+      // garante gravação rapida (sessionStorage é síncrono, mas mantemos um pequeno delay pra UX)
+      setTimeout(()=> {
+        // se no HTML já houver onclick="window.location.href='teleop.html'", não precisamos setar
+        // mas para garantir, apenas navega se o botão não tiver um atributo data-no-nav
+        if(nextBtn.getAttribute('data-no-nav')) return;
+        // tenta pegar href do onclick ou usar fallback
+        // preferimos usar window.location (simples)
+        window.location.href = nextBtn.getAttribute('data-href') || 'teleop.html';
+      }, 120);
     });
   }
 
-  // intercept back: save as well (optional)
+  // quando clicar Anterior: salva e vai para index
   if(backBtn){
-    backBtn.addEventListener('click', ()=> saveDraft(true));
+    backBtn.addEventListener('click', (ev) => {
+      saveDraft();
+      setTimeout(()=> {
+        window.location.href = backBtn.getAttribute('data-href') || 'index.html';
+      }, 80);
+    });
   }
 
-  // also save when user leaves the page (safety)
-  window.addEventListener('beforeunload', ()=> saveDraft(true));
+  // save on unload (safety)
+  window.addEventListener('beforeunload', ()=> {
+    try { saveDraft(); } catch(e){ /* ignore */ }
+  });
 
-  // prefill UI from draft on load
-  loadDraft();
+  // inicialização
+  document.addEventListener('DOMContentLoaded', ()=> {
+    loadFromDraft();
+    // garante que, se a sua UI usa botões com onclick inline, não cause conflito:
+    // se os botões já têm onclick que navegaria, a nossa lógica roda primeiro.
+  });
 
 })();

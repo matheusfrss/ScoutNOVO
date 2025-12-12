@@ -1,71 +1,133 @@
 // teleop.js
 (function(){
-  const qtyAge = document.getElementById('qtyAgeTele');
-  const qtyPre = document.getElementById('qtyPreTele');
-  const toastEl = document.getElementById('toast');
-
+  // elementos esperados no HTML (IDs)
+  const qtyAgeTele = document.getElementById('qtyAgeTele'); // número idade média na teleop
+  const qtyPreTele = document.getElementById('qtyPreTele'); // número pré-históricos na teleop
   const backBtn = document.getElementById('backBtn');
   const nextBtn = document.getElementById('nextBtn');
+  const toastEl = document.getElementById('toast');
 
-  const DRAFT_KEY = 'ff_rd_scout_draft'; // mesma chave usada pelo autonomous.js
-
-  // simple toast (reaproveita estilo)
+  // util: toast simples (reusa estilo do seu projeto)
   function showToast(msg, ms = 1400){
     if(!toastEl){ console.log('TOAST:', msg); return; }
     toastEl.textContent = msg;
     toastEl.classList.add('show');
-    setTimeout(()=> toastEl.classList.remove('show'), ms);
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=> toastEl.classList.remove('show'), ms);
   }
 
-  // carrega rascunho (sessionStorage primeiro, depois localStorage)
-  function loadDraft(){
+  // tenta parseInt com fallback 0
+  function toInt(v){
+    const n = parseInt(String(v || '').replace(/\D/g,''), 10);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  // carrega valores do draft (usa loadSection definida em draft-utils.js)
+  function load(){
     try {
-      const raw = sessionStorage.getItem(DRAFT_KEY) || localStorage.getItem(DRAFT_KEY);
-      if(!raw) return;
-      const draft = JSON.parse(raw);
-      if(draft && draft.teleop){
-        const t = draft.teleop;
-        if(typeof t.qtyAgeTele !== 'undefined') qtyAge.value = t.qtyAgeTele;
-        if(typeof t.qtyPreTele !== 'undefined') qtyPre.value = t.qtyPreTele;
-      }
+      const data = (typeof loadSection === 'function') ? loadSection('teleop') : null;
+      if(!data) return;
+      if(typeof data.qtyAge !== 'undefined' && qtyAgeTele) qtyAgeTele.value = data.qtyAge;
+      if(typeof data.qtyPre !== 'undefined' && qtyPreTele) qtyPreTele.value = data.qtyPre;
     } catch(e){
-      console.warn('Erro lendo draft teleop:', e);
+      console.warn('Erro ao carregar draft teleop', e);
     }
   }
 
-  // salva rascunho (no sessionStorage por padrão)
-  function saveDraft(saveToSession = true){
+  // monta objeto e salva seção (usa saveSection de draft-utils.js)
+  function saveDraft(syncToSession = true){
     try {
-      const rawLocal = sessionStorage.getItem(DRAFT_KEY) || localStorage.getItem(DRAFT_KEY);
-      const draft = rawLocal ? JSON.parse(rawLocal) : {};
-      draft.teleop = {
-        qtyAgeTele: qtyAge.value ? parseInt(qtyAge.value, 10) : 0,
-        qtyPreTele: qtyPre.value ? parseInt(qtyPre.value, 10) : 0,
+      const payload = {
+        qtyAge: qtyAgeTele ? toInt(qtyAgeTele.value) : 0,
+        qtyPre: qtyPreTele ? toInt(qtyPreTele.value) : 0,
         savedAt: new Date().toISOString()
       };
-      const target = saveToSession ? sessionStorage : localStorage;
-      target.setItem(DRAFT_KEY, JSON.stringify(draft));
-      showToast('Teleoperada salva');
-      return draft;
+      if(typeof saveSection === 'function'){
+        const draft = saveSection('teleop', payload);
+        showToast('Teleop salvo');
+        return draft;
+      } else {
+        // fallback: grava direto no sessionStorage (compatibilidade)
+        const DRAFT_KEY = 'ff_rd_scout_draft';
+        const raw = sessionStorage.getItem(DRAFT_KEY) || '{}';
+        const draft = JSON.parse(raw);
+        draft.teleop = Object.assign({}, draft.teleop || {}, payload);
+        draft.savedAt = new Date().toISOString();
+        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        showToast('Teleop salvo (local)');
+        return draft;
+      }
     } catch(e){
-      console.error('Erro salvando draft teleop:', e);
-      showToast('Erro ao salvar rascunho');
+      console.error('Erro ao salvar teleop', e);
+      showToast('Erro ao salvar teleop');
       return null;
     }
   }
 
-  // eventos: salvar antes de navegar
-  if(nextBtn){
-    nextBtn.addEventListener('click', ()=>{
-      saveDraft(true);
-      // navegação é feita pelo onclick do botão em HTML
-    });
-  }
-  if(backBtn){
-    backBtn.addEventListener('click', ()=> saveDraft(true));
+  // navega para href contido no data-href do botão (usado depois de salvar)
+  function navigateFromButton(btn){
+    if(!btn) return;
+    const href = btn.getAttribute('data-href') || btn.dataset.href;
+    if(!href) return;
+    // garante gravação rápida antes de navegar
+    saveDraft(true);
+    // small delay to ensure sessionStorage write completes
+    setTimeout(()=> { window.location.href = href; }, 120);
   }
 
+  // valida (apenas checa números não-negativos)
+  function validate(){
+    if(qtyAgeTele && qtyAgeTele.value && toInt(qtyAgeTele.value) < 0){
+      showToast('Quantidade (idade média) inválida');
+      return false;
+    }
+    if(qtyPreTele && qtyPreTele.value && toInt(qtyPreTele.value) < 0){
+      showToast('Quantidade (pré-históricos) inválida');
+      return false;
+    }
+    return true;
+  }
+
+  // bind events
+  if(nextBtn){
+    nextBtn.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      if(!validate()) return;
+      saveDraft(true);
+      // small timeout to ensure sessionStorage write completes
+      setTimeout(()=> {
+        const href = nextBtn.getAttribute('data-href') || nextBtn.dataset.href;
+        if(href) window.location.href = href;
+      }, 120);
+    });
+  }
+
+  if(backBtn){
+    backBtn.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      if(!validate()) return;
+      saveDraft(true);
+      setTimeout(()=> {
+        const href = backBtn.getAttribute('data-href') || backBtn.dataset.href;
+        if(href) window.location.href = href;
+      }, 120);
+    });
+  }
+
+  // salva automaticamente ao alterar campos (opcional: evita perda)
+  [qtyAgeTele, qtyPreTele].forEach(el=>{
+    if(!el) return;
+    el.addEventListener('input', ()=> {
+      // throttle: salva a cada 800ms de inatividade
+      clearTimeout(saveDraft._t);
+      saveDraft._t = setTimeout(()=> saveDraft(true), 800);
+    });
+  });
+
+  // salvar ao sair da página
   window.addEventListener('beforeunload', ()=> saveDraft(true));
-  loadDraft();
+
+  // init
+  load();
 
 })();

@@ -228,9 +228,108 @@
     });
   });
 
-  // ===== init: garante acessibilidade visual se já tiver dados selecionados =====
   (function initMarks(){
     
     })();
 
 })();
+
+(function(){
+  // elementos
+  const segBtns = Array.from(document.querySelectorAll('.seg-btn'));
+  const posBtns = Array.from(document.querySelectorAll('.pos-btn'));
+  const blue = document.getElementById('blueAlliance');
+  const red = document.getElementById('redAlliance');
+  const saveBtn = document.getElementById('saveBtn');
+  const form = document.getElementById('scoutForm');
+  const toastEl = document.getElementById('toast');
+
+  function showToast(msg, timeout = 1400){
+    if(!toastEl){ console.log('TOAST:', msg); return; }
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(()=> toastEl.classList.remove('show'), timeout);
+  }
+
+  function activateGroup(list, target){
+    list.forEach(b => b.classList.toggle('active', b === target));
+  }
+
+  // handlers UI
+  segBtns.forEach(b => b.addEventListener('click', ()=> activateGroup(segBtns, b)));
+  posBtns.forEach(b => b.addEventListener('click', ()=> activateGroup(posBtns, b)));
+
+  function toggleAlliance(el){
+    if(!el) return;
+    const pressed = el.getAttribute('aria-pressed') === 'true';
+    blue?.setAttribute('aria-pressed','false');
+    red?.setAttribute('aria-pressed','false');
+    if(!pressed) el.setAttribute('aria-pressed','true');
+    blue?.classList.toggle('selected', blue?.getAttribute('aria-pressed')==='true');
+    red?.classList.toggle('selected', red?.getAttribute('aria-pressed')==='true');
+  }
+  blue?.addEventListener('click', ()=> toggleAlliance(blue));
+  red?.addEventListener('click', ()=> toggleAlliance(red));
+
+  // carregar rascunho se existir
+  (function initFromDraft(){
+    const draft = loadSection ? readDraft() : null;
+    if(!draft || !draft.info) return;
+    const info = draft.info;
+    if(form.scouter) form.scouter.value = info.scouter || '';
+    if(form.matchNumber) form.matchNumber.value = info.match_number || '';
+    if(form.teamNumber) form.teamNumber.value = info.team_number || '';
+
+    // match type - procura botao com data-type
+    if(info.match_type){
+      const btn = document.querySelector(`.seg-btn[data-type="${info.match_type}"]`);
+      if(btn) activateGroup(segBtns, btn);
+    }
+    if(info.start_position){
+      const pbtn = document.querySelector(`.pos-btn[data-pos="${info.start_position}"]`);
+      if(pbtn) activateGroup(posBtns, pbtn);
+    }
+    if(info.alliance){
+      if(info.alliance.toUpperCase() === 'BLUE') toggleAlliance(blue);
+      if(info.alliance.toUpperCase() === 'RED') toggleAlliance(red);
+    }
+  })();
+
+  // salvar seção info (sessionStorage)
+  function saveInfoLocal(){
+    const scouter = form.scouter?.value?.trim() || '';
+    const matchNumber = parseInt((form.matchNumber?.value||'').replace(/\D/g,''),10) || 0;
+    const teamNumber = parseInt((form.teamNumber?.value||'').replace(/\D/g,''),10) || 0;
+    const matchType = document.querySelector('.seg-btn.active')?.dataset.type || document.querySelector('.seg-btn.selected')?.dataset.type || null;
+    const alliance = (blue?.getAttribute('aria-pressed')==='true') ? 'BLUE' : ((red?.getAttribute('aria-pressed')==='true') ? 'RED' : null);
+    const startPos = document.querySelector('.pos-btn.active')?.dataset.pos || document.querySelector('.pos-btn.selected')?.dataset.pos || null;
+
+    if(!scouter || matchNumber <= 0 || teamNumber <= 0){
+      showToast('Preencha: scouter, nº partida e nº do time', 1800);
+      return;
+    }
+
+    saveSection('info', {
+      scouter,
+      match_number: matchNumber,
+      team_number: teamNumber,
+      match_type: matchType,
+      alliance: alliance,
+      start_position: startPos
+    });
+    showToast('Informações salvas localmente');
+  }
+
+  saveBtn?.addEventListener('click', ()=> {
+    saveInfoLocal();
+  });
+
+  // salvar antes de navegar
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn?.addEventListener('click', ()=> {
+    saveInfoLocal();
+    // navigation handled by HTML onclick, so no preventDefault here
+  });
+
+})();
+
