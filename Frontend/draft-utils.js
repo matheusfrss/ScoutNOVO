@@ -1,36 +1,43 @@
 // draft-utils.js
-const DRAFT_KEY = 'ff_rd_scout_draft';
+const DRAFT_KEY = "scoutAtual";
 
-function readDraft() {
-  try {
-    return JSON.parse(sessionStorage.getItem(DRAFT_KEY) || '{}');
-  } catch (e) {
-    console.warn('Erro lendo draft', e);
-    return {};
-  }
-}
-
-function writeDraft(draft) {
-  try {
-    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-  } catch (e) {
-    console.warn('Erro escrevendo draft', e);
-  }
-}
-
-function saveSection(name, obj) {
-  const draft = readDraft();
-  draft[name] = Object.assign({}, draft[name] || {}, obj);
-  draft.savedAt = new Date().toISOString();
-  writeDraft(draft);
+/**
+ * Cria um novo scout (usado na página inicial)
+ */
+function initDraft(info) {
+  const draft = {
+    info: info || {},
+    autonomo: {},
+    teleop: {},
+    endgame: {}
+  };
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
   return draft;
 }
 
-function loadSection(name) {
-  const draft = readDraft();
-  return draft[name] || null;
+/**
+ * Lê o scout atual
+ */
+function readDraft() {
+  const raw = localStorage.getItem(DRAFT_KEY);
+  return raw ? JSON.parse(raw) : null;
 }
 
+/**
+ * Salva uma seção específica (autonomo, teleop, endgame)
+ */
+function saveSection(section, data) {
+  const draft = readDraft();
+  if (!draft) return null;
+
+  draft[section] = data;
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  return draft;
+}
+
+/**
+ * Finaliza o scout (usado no endgame)
+ */
 function clearDraft() {
-  sessionStorage.removeItem(DRAFT_KEY);
+  localStorage.removeItem(DRAFT_KEY);
 }
