@@ -1,49 +1,70 @@
 // inicio.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.getElementById("nextBtn");
 
-  // segurança extra (evita erro se o botão não existir)
-  if (!nextBtn) {
-    console.error("Botão nextBtn não encontrado no HTML");
-    return;
+  const segBtns = document.querySelectorAll(".seg-btn");
+  const posBtns = document.querySelectorAll(".pos-btn");
+  const blue = document.getElementById("blueAlliance");
+  const red = document.getElementById("redAlliance");
+
+  // ===== helpers visuais =====
+  function activateGroup(list, target) {
+    list.forEach(btn => btn.classList.toggle("active", btn === target));
   }
 
-  nextBtn.addEventListener("click", () => {
-    const numPartida = document.getElementById("matchNumber")?.value?.trim();
-    const tipoPartida = document.getElementById("tipoPartida")?.value;
-    const numEquipe = document.getElementById("teamNumber")?.value?.trim();
-    const corAlianca = document.getElementById("corAlianca")?.value;
-    const posicao = document.getElementById("posicao")?.value;
-    const nomeScout = document.getElementById("nomeScout")?.value?.trim();
+  function toggleAlliance(btn) {
+    blue.setAttribute("aria-pressed", "false");
+    red.setAttribute("aria-pressed", "false");
+    blue.classList.remove("selected");
+    red.classList.remove("selected");
 
-    // validação
-    if (
-      !numPartida ||
-      !tipoPartida ||
-      !numEquipe ||
-      !corAlianca ||
-      !posicao ||
-      !nomeScout
-    ) {
-      alert("Preencha todos os campos antes de continuar.");
+    btn.setAttribute("aria-pressed", "true");
+    btn.classList.add("selected");
+  }
+
+  // ===== eventos =====
+  segBtns.forEach(btn =>
+    btn.addEventListener("click", () => activateGroup(segBtns, btn))
+  );
+
+  posBtns.forEach(btn =>
+    btn.addEventListener("click", () => activateGroup(posBtns, btn))
+  );
+
+  blue.addEventListener("click", () => toggleAlliance(blue));
+  red.addEventListener("click", () => toggleAlliance(red));
+
+  // ===== botão próximo =====
+  nextBtn.addEventListener("click", () => {
+    const scouter = document.getElementById("scouter")?.value.trim();
+    const matchNumber = document.getElementById("matchNumber")?.value;
+    const teamNumber = document.getElementById("teamNumber")?.value;
+
+    const matchType = document.querySelector(".seg-btn.active")?.dataset.type;
+    const startPos = document.querySelector(".pos-btn.active")?.dataset.pos;
+    const alliance =
+      blue.getAttribute("aria-pressed") === "true"
+        ? "blue"
+        : red.getAttribute("aria-pressed") === "true"
+        ? "red"
+        : null;
+
+    if (!scouter || !matchNumber || !teamNumber || !matchType || !startPos || !alliance) {
+      alert("Preencha TODAS as informações antes de continuar.");
       return;
     }
 
-    // cria o draft central no sessionStorage
+    // salva no draft central
     initDraft({
-      numPartida: Number(numPartida),
-      tipoPartida,
-      numEquipe: Number(numEquipe),
-      corAlianca,
-      posicao,
-      nomeScout,
+      scouter,
+      matchNumber: Number(matchNumber),
+      teamNumber: Number(teamNumber),
+      matchType,
+      alliance,
+      startPos,
       criadoEm: new Date().toISOString()
     });
 
-    console.log("Draft inicial salvo com sucesso");
-
-    // navega para a fase autônoma
-    window.location.href = "autonomo.html";
+    window.location.href = "autonomous.html";
   });
 });
