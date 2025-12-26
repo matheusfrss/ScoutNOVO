@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleAlliance(btn) {
-    blue.setAttribute("aria-pressed", "false");
-    red.setAttribute("aria-pressed", "false");
-    blue.classList.remove("selected");
-    red.classList.remove("selected");
+    [blue, red].forEach(b => {
+      b.setAttribute("aria-pressed", "false");
+      b.classList.remove("selected");
+    });
 
     btn.setAttribute("aria-pressed", "true");
     btn.classList.add("selected");
@@ -37,11 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== botão próximo =====
   nextBtn.addEventListener("click", () => {
     const scouter = document.getElementById("scouter")?.value.trim();
-    const matchNumber = document.getElementById("matchNumber")?.value;
-    const teamNumber = document.getElementById("teamNumber")?.value;
+    const matchNumber = Number(document.getElementById("matchNumber")?.value);
+    const teamNumber = Number(document.getElementById("teamNumber")?.value);
 
     const matchType = document.querySelector(".seg-btn.active")?.dataset.type;
-    const startPos = document.querySelector(".pos-btn.active")?.dataset.pos;
+    const startingPosition =
+      document.querySelector(".pos-btn.active")?.dataset.pos;
+
     const alliance =
       blue.getAttribute("aria-pressed") === "true"
         ? "blue"
@@ -49,21 +51,30 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "red"
         : null;
 
-    if (!scouter || !matchNumber || !teamNumber || !matchType || !startPos || !alliance) {
+    if (
+      !scouter ||
+      !matchNumber ||
+      !teamNumber ||
+      !matchType ||
+      !startingPosition ||
+      !alliance
+    ) {
       alert("Preencha TODAS as informações antes de continuar.");
       return;
     }
 
-    // salva no draft central
+    // ✅ AQUI É O CORRETO
     initDraft({
-      scouter,
-      matchNumber: Number(matchNumber),
-      teamNumber: Number(teamNumber),
+      matchNumber,
+      teamNumber,
+      nomeScoute,
       matchType,
       alliance,
-      startPos,
+      startingPosition,
       criadoEm: new Date().toISOString()
     });
+
+    console.log("Draft criado:", readDraft());
 
     window.location.href = "autonomous.html";
   });

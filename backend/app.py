@@ -4,208 +4,166 @@ import requests
 import os
 from dotenv import load_dotenv
 import json
-import traceback  # Adicione esta linha
+import traceback
+
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Configurações
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 TABLE_NAME = "robos"
 
-# VERIFICAÇÃO DAS VARIÁVEIS DE AMBIENTE
+# ======================
+# DEBUG DE CONFIG
+# ======================
 print("=" * 50)
-print("VERIFICAÇÃO DE CONFIGURAÇÃO SUPABASE")
+print("CONFIGURAÇÃO SUPABASE")
 print("=" * 50)
-print(f"SUPABASE_URL presente: {'✅ SIM' if SUPABASE_URL else '❌ NÃO'}")
-print(f"SUPABASE_KEY presente: {'✅ SIM' if SUPABASE_KEY else '❌ NÃO'}")
-if SUPABASE_URL:
-    print(f"URL: {SUPABASE_URL[:30]}...")  # Mostra só parte por segurança
-if SUPABASE_KEY:
-    print(f"Key: {SUPABASE_KEY[:20]}...")  # Mostra só parte
+print(f"SUPABASE_URL: {'OK' if SUPABASE_URL else 'ERRO'}")
+print(f"SUPABASE_KEY: {'OK' if SUPABASE_KEY else 'ERRO'}")
 print("=" * 50)
 
+# ======================
+# ROTA PRINCIPAL
+# ======================
 @app.route("/api/salvar_robo", methods=["POST"])
 def salvar_robo():
-    """Recebe dados completos das 4 páginas"""
     try:
-        print("🔵 ROTA /api/salvar_robo ACESSADA")
+        print("🔵 /api/salvar_robo chamado")
+
         dados = request.json
-        print(f"📥 Dados recebidos: {json.dumps(dados, indent=2)}")
-        
-        # Validação básica
+        print("📥 JSON recebido:")
+        print(json.dumps(dados, indent=2))
+
         if not dados:
-            print("❌ Dados vazios recebidos")
+            return jsonify({"erro": "JSON vazio"}), 400
+
+        # ===== SEÇÕES =====
+        basic = dados.get("basic", {})
+        auto = dados.get("auto", {})
+        teleop = dados.get("teleop", {})
+        endgame = dados.get("endgame", {})
+
+        # ===== VALIDAÇÃO =====
+        if not basic.get("matchNumber") or not basic.get("teamNumber"):
             return jsonify({
-                "status": "erro",
-                "mensagem": "Nenhum dado recebido"
+                "erro": "num_partida ou num_equipe ausente"
             }), 400
-        
-        campos_obrigatorios = ["num_partida", "num_equipe"]
-        for campo in campos_obrigatorios:
-            if campo not in dados:
-                print(f"❌ Campo obrigatório faltando: {campo}")
-                return jsonify({
-                    "status": "erro",
-                    "mensagem": f"Campo obrigatório faltando: {campo}"
-                }), 400
-        
-        # Preparar payload para Supabase
+
+        # ===== PAYLOAD SUPABASE =====
         payload = {
-            # 1ª Página
-            "num_partida": dados.get("num_partida"),
-            "tipo_partida": dados.get("tipo_partida", "qualificatoria"),
-            "num_equipe": dados.get("num_equipe"),
-            "alianca": dados.get("alianca", "vermelho"),
-            "posicao_inicial": dados.get("posicao_inicial", "1"),
-            "nome_scout": dados.get("nome_scout", ""),
-            
-            # JSON fields
+            # --- Básico ---
+            "num_partida": basic.get("matchNumber"),
+            "num_equipe": basic.get("teamNumber"),
+            "nome_scout": basic.get("scouter"),
+            "tipo_partida": basic.get("matchType"),
+            "alianca": basic.get("alliance"),
+            "posicao_inicial": basic.get("startingPosition"),
+
+            # --- Autônomo ---
             "autonomo": json.dumps({
-                "ultrapassou_linha": dados.get("ultrapassou_linha", False),
-                "artefatos_idade_media": dados.get("artefatos_idade_media_auto", 0),
-                "artefatos_pre_historicos": dados.get("artefatos_pre_historicos_auto", 0)
+                "ultrapassou_linha": auto.get("crossedLine"),
+                "artefatos_idade_media": auto.get("mediaArtifacts", 0),
+                "artefatos_pre_historicos": auto.get("prehistoricArtifacts", 0)
             }),
-            
+
+            # --- Teleop ---
             "teleop": json.dumps({
-                "artefatos_idade_media": dados.get("artefatos_idade_media_teleop", 0),
-                "artefatos_pre_historicos": dados.get("artefatos_pre_historicos_teleop", 0)
+                "artefatos_idade_media": teleop.get("mediaArtifacts", 0),
+                "artefatos_pre_historicos": teleop.get("prehistoricArtifacts", 0)
             }),
-            
+
+            # --- Endgame ---
             "endgame": json.dumps({
-                "estacionou_pozo": dados.get("estacionou_pozo", False),
-                "estacionou_sitio": dados.get("estacionou_sitio", False),
-                "robo_parou": dados.get("robo_parou", False),
-                "penalidades": dados.get("penalidades", ""),
-                "estrategia": dados.get("estrategia", ""),
-                "observacoes": dados.get("observacoes", "")
-            })
+                "estacionou_pozo": endgame.get("estacionouPoco"),
+                "estacionou_sitio": endgame.get("estacionouSitio"),
+                "robo_parou": endgame.get("roboParou"),
+                "penalidades": endgame.get("penalidades", ""),
+                "estrategia": endgame.get("estrategia", "")
+            }),
+
+            # --- Backup completo ---
+            "dados_json": json.dumps(dados)
         }
-        
-        print(f"📤 Payload para Supabase: {json.dumps(payload, indent=2)}")
-        
-        # VERIFICA SE AS VARIÁVEIS EXISTEM
-        if not SUPABASE_URL or not SUPABASE_KEY:
-            print("❌ Variáveis de ambiente não configuradas!")
-            return jsonify({
-                "status": "erro",
-                "mensagem": "Configuração do banco de dados incompleta"
-            }), 500
-        
-        # Headers para Supabase
+
+        print("📤 Payload Supabase:")
+        print(json.dumps(payload, indent=2))
+
+        # ===== HEADERS =====
         headers = {
             "apikey": SUPABASE_KEY,
             "Authorization": f"Bearer {SUPABASE_KEY}",
             "Content-Type": "application/json",
             "Prefer": "return=representation"
         }
-        
-        # URL completa
-        url_completa = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
-        print(f"🌐 Enviando para: {url_completa}")
-        
-        # Enviar para Supabase
-        print("🔄 Fazendo requisição para Supabase...")
-        resposta = requests.post(
-            url_completa,
-            json=payload,
+
+        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
+
+        response = requests.post(
+            url,
             headers=headers,
+            json=payload,
             timeout=10
         )
-        
-        print(f"📨 Resposta do Supabase - Status: {resposta.status_code}")
-        print(f"📨 Resposta do Supabase - Texto: {resposta.text[:200]}...")
-        
-        if resposta.status_code in [200, 201]:
-            dados_resposta = resposta.json()
-            print(f"✅ Salvo no Supabase! ID: {dados_resposta[0]['id'] if dados_resposta else 'N/A'}")
-            
+
+        print(f"📨 Supabase status: {response.status_code}")
+        print(response.text)
+
+        if response.status_code in (200, 201):
+            res = response.json()
             return jsonify({
                 "status": "ok",
-                "mensagem": "Scouting completo salvo com sucesso!",
-                "id": dados_resposta[0]['id'] if dados_resposta else None
+                "id": res[0]["id"] if res else None
             })
-        else:
-            print(f"❌ Erro Supabase: {resposta.status_code} - {resposta.text}")
-            return jsonify({
-                "status": "erro",
-                "mensagem": f"Erro ao salvar no banco: {resposta.text}",
-                "status_code": resposta.status_code
-            }), 500
-            
-    except requests.exceptions.RequestException as e:
-        print(f"🌐 Erro de conexão: {str(e)}")
+
         return jsonify({
-            "status": "erro",
-            "mensagem": f"Erro de conexão com o banco: {str(e)}"
-        }), 500
-    except Exception as erro:
-        print(f"💥 ERRO INESPERADO: {str(erro)}")
-        print(traceback.format_exc())  # Mostra traceback completo
-        return jsonify({
-            "status": "erro",
-            "mensagem": f"Erro interno: {str(erro)}",
-            "traceback": traceback.format_exc()
+            "erro": "Falha ao salvar no Supabase",
+            "status_code": response.status_code,
+            "resposta": response.text
         }), 500
 
-@app.route("/teste", methods=["GET"])
+    except Exception as e:
+        print("💥 ERRO:")
+        print(traceback.format_exc())
+        return jsonify({
+            "erro": str(e)
+        }), 500
+
+
+# ======================
+# ROTAS DE TESTE
+# ======================
+@app.route("/teste")
 def teste():
-    """Rota de teste simples"""
     return jsonify({
         "status": "ok",
-        "mensagem": "API funcionando",
-        "supabase_url": SUPABASE_URL[:20] + "..." if SUPABASE_URL else "não configurado",
-        "tabela": TABLE_NAME
+        "mensagem": "API Flask funcionando"
     })
 
-@app.route("/teste_supabase", methods=["GET"])
+@app.route("/teste_supabase")
 def teste_supabase():
-    """Testa conexão com Supabase"""
-    try:
-        if not SUPABASE_URL or not SUPABASE_KEY:
-            return jsonify({
-                "status": "erro",
-                "mensagem": "Variáveis não configuradas"
-            }), 500
-        
-        headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}"
-        }
-        
-        resposta = requests.get(
-            f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?limit=1",
-            headers=headers,
-            timeout=5
-        )
-        
-        return jsonify({
-            "status": "ok" if resposta.status_code == 200 else "erro",
-            "supabase_status": resposta.status_code,
-            "mensagem": "Conexão OK" if resposta.status_code == 200 else "Falha na conexão",
-            "dados": resposta.json() if resposta.status_code == 200 else None
-        })
-        
-    except Exception as e:
-        return jsonify({
-            "status": "erro",
-            "mensagem": str(e)
-        }), 500
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}"
+    }
 
-@app.route("/")
-def home():
+    r = requests.get(
+        f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?limit=1",
+        headers=headers
+    )
+
     return jsonify({
-        "api": "ScoutBOX FRC - Debug",
-        "rotas": {
-            "teste": "GET /teste",
-            "teste_supabase": "GET /teste_supabase",
-            "salvar": "POST /api/salvar_robo"
-        }
+        "status_code": r.status_code,
+        "dados": r.json() if r.status_code == 200 else r.text
     })
+
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=3080)
-
+    app.run(
+        host="0.0.0.0",
+        port=3080,
+        debug=True
+    )

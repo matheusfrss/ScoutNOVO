@@ -1,7 +1,7 @@
 // endgame.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  // segurança: draft-utils precisa existir
+  // Segurança: draft-utils precisa existir
   if (typeof readDraft !== "function" || typeof saveSection !== "function") {
     console.warn("[endgame] draft-utils não encontrado.");
     return;
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const finishBtn = document.getElementById("finishBtn");
 
-  // toggles
+  // Botões
   const pitYes = document.getElementById("pitYes");
   const pitNo = document.getElementById("pitNo");
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let site = null;
   let stopped = null;
 
-  // helper visual
+  // ===== helper visual =====
   function togglePair(yesBtn, noBtn, setter, value) {
     yesBtn.classList.remove("active");
     noBtn.classList.remove("active");
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setter(value);
   }
 
-  // eventos dos toggles
+  // ===== eventos =====
   pitYes.addEventListener("click", () =>
     togglePair(pitYes, pitNo, v => (pit = v), true)
   );
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     togglePair(stoppedYes, stoppedNo, v => (stopped = v), false)
   );
 
-  // FINALIZAR
+  // ===== FINALIZAR =====
   finishBtn.addEventListener("click", async () => {
     const draft = readDraft();
 
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // salva ENDGAME no draft
+    // Salva Endgame no draft
     saveSection("endgame", {
       estacionouPoco: pit,
       estacionouSitio: site,
@@ -91,18 +91,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const finalDraft = readDraft();
-    console.log("Scout completo:", finalDraft);
+
+    // 🔍 DEBUG IMPORTANTE
+    console.log("=== SCOUT COMPLETO (DRAFT) ===");
+    console.log(finalDraft);
     
-    // ============= ADICIONE ESTA PARTE ANTES DO FETCH =============
-    console.log("=== DEBUG: ESTRUTURA COMPLETA DO DRAFT ===");
+    // Mostra estrutura detalhada
+    console.log("📋 ESTRUTURA DETALHADA:");
     console.log("basic:", finalDraft.basic);
     console.log("auto:", finalDraft.auto);
     console.log("teleop:", finalDraft.teleop);
     console.log("endgame:", finalDraft.endgame);
     
-    // Transforma os dados para o formato que o backend espera
+    // ===== TRANSFORMA OS DADOS PARA O FORMATO DO BACKEND =====
     const dadosParaBackend = {
-      // Página 1 - Basic
+      // Página 1 - Basic (nomes corrigidos para o backend)
       num_partida: finalDraft.basic?.matchNumber || 0,
       num_equipe: finalDraft.basic?.teamNumber || 0,
       nome_scout: finalDraft.basic?.scoutName || "",
@@ -110,46 +113,48 @@ document.addEventListener("DOMContentLoaded", () => {
       alianca: finalDraft.basic?.alliance || "vermelho",
       posicao_inicial: finalDraft.basic?.startingPosition || "1",
       
-      // Página 2 - Auto
-      ultrapassou_linha: finalDraft.auto?.crossedLine || false,
-      artefatos_idade_media_auto: finalDraft.auto?.mediaArtifacts || 0,
-      artefatos_pre_historicos_auto: finalDraft.auto?.prehistoricArtifacts || 0,
+      // Página 2 - Auto (convertendo para JSON string)
+      autonomo: JSON.stringify({
+        ultrapassou_linha: finalDraft.auto?.crossedLine || false,
+        artefatos_idade_media: finalDraft.auto?.artefatosMedios || 0,
+        artefatos_pre_historicos: finalDraft.auto?.artefatosPrehistoricos || 0
+      }),
       
-      // Página 3 - Teleop
-      artefatos_idade_media_teleop: finalDraft.teleop?.mediaArtifacts || 0,
-      artefatos_pre_historicos_teleop: finalDraft.teleop?.prehistoricArtifacts || 0,
+      // Página 3 - Teleop (convertendo para JSON string)
+      teleop: JSON.stringify({
+        artefatos_idade_media: finalDraft.teleop?.artefatosMedios || 0,
+        artefatos_pre_historicos: finalDraft.teleop?.artefatosPrehistoricos || 0
+      }),
       
-      // Página 4 - Endgame
-      estacionou_pozo: finalDraft.endgame?.estacionouPoco || false,
-      estacionou_sitio: finalDraft.endgame?.estacionouSitio || false,
-      robo_parou: finalDraft.endgame?.roboParou || false,
-      penalidades: finalDraft.endgame?.penalidades || "",
-      estrategia: finalDraft.endgame?.estrategia || "",
-      observacoes: "" // Adicione se tiver campo de observações
+      // Página 4 - Endgame (convertendo para JSON string)
+      endgame: JSON.stringify({
+        estacionou_pozo: finalDraft.endgame?.estacionouPoco || false,
+        estacionou_sitio: finalDraft.endgame?.estacionouSitio || false,
+        robo_parou: finalDraft.endgame?.roboParou || false,
+        penalidades: finalDraft.endgame?.penalidades || "",
+        estrategia: finalDraft.endgame?.estrategia || ""
+      })
     };
     
     console.log("=== DADOS TRANSFORMADOS PARA BACKEND ===");
     console.log(dadosParaBackend);
-    console.log("=========================================");
-    // ============= FIM DA PARTE ADICIONADA =============
+    console.log("========================================");
 
-    // ========= ENVIO FINAL PARA O BACKEND =========
+    // ===== ENVIO PARA BACKEND =====
     try {
+      console.log("📤 Enviando para: http://localhost:3080/api/salvar_robo");
+      
       const response = await fetch("http://localhost:3080/api/salvar_robo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        // Mude para enviar os dados transformados:
-        body: JSON.stringify(dadosParaBackend)
-        // Se quiser testar com os dados originais primeiro, mantenha:
-        // body: JSON.stringify(finalDraft)
+        body: JSON.stringify(dadosParaBackend) // ✅ ENVIA DADOS TRANSFORMADOS
       });
 
       if (!response.ok) {
-        // Tenta ler a resposta de erro
         const errorText = await response.text();
-        console.error("Resposta de erro do servidor:", errorText);
+        console.error("❌ Resposta de erro:", errorText);
         throw new Error(`Erro ${response.status}: ${errorText}`);
       }
 
@@ -159,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (result.status === 'ok') {
         alert("✅ " + result.mensagem);
         clearDraft();
-        // redireciona se quiser
         window.location.href = "index.html";
       } else {
         alert("❌ " + (result.mensagem || "Erro ao salvar"));
@@ -169,8 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("💥 Erro ao enviar:", error);
       alert(
         "Erro ao enviar os dados para o servidor.\n" +
-        "Os dados NÃO foram perdidos (draft mantido).\n" +
-        "Detalhes: " + error.message
+        "Os dados NÃO foram perdidos (draft mantido).\n\n" +
+        error.message
       );
     }
   });

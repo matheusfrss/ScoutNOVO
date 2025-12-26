@@ -1,13 +1,10 @@
 // draft-utils.js
 const DRAFT_KEY = "scoutAtual";
 
-/**
- * Cria um novo scout (usado na página inicial)
- */
-function initDraft(info) {
+function initDraft(basic) {
   const draft = {
-    info: info || {},
-    autonomo: {},
+    basic: basic || {},
+    auto: {},
     teleop: {},
     endgame: {}
   };
@@ -15,17 +12,11 @@ function initDraft(info) {
   return draft;
 }
 
-/**
- * Lê o scout atual
- */
 function readDraft() {
   const raw = localStorage.getItem(DRAFT_KEY);
   return raw ? JSON.parse(raw) : null;
 }
 
-/**
- * Salva uma seção específica (autonomo, teleop, endgame)
- */
 function saveSection(section, data) {
   const draft = readDraft();
   if (!draft) return null;
@@ -35,9 +26,6 @@ function saveSection(section, data) {
   return draft;
 }
 
-/**
- * Finaliza o scout (usado no endgame)
- */
 function clearDraft() {
   localStorage.removeItem(DRAFT_KEY);
 }
