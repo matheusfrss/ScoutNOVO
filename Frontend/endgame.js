@@ -92,35 +92,85 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const finalDraft = readDraft();
     console.log("Scout completo:", finalDraft);
+    
+    // ============= ADICIONE ESTA PARTE ANTES DO FETCH =============
+    console.log("=== DEBUG: ESTRUTURA COMPLETA DO DRAFT ===");
+    console.log("basic:", finalDraft.basic);
+    console.log("auto:", finalDraft.auto);
+    console.log("teleop:", finalDraft.teleop);
+    console.log("endgame:", finalDraft.endgame);
+    
+    // Transforma os dados para o formato que o backend espera
+    const dadosParaBackend = {
+      // Página 1 - Basic
+      num_partida: finalDraft.basic?.matchNumber || 0,
+      num_equipe: finalDraft.basic?.teamNumber || 0,
+      nome_scout: finalDraft.basic?.scoutName || "",
+      tipo_partida: finalDraft.basic?.matchType || "qualificatoria",
+      alianca: finalDraft.basic?.alliance || "vermelho",
+      posicao_inicial: finalDraft.basic?.startingPosition || "1",
+      
+      // Página 2 - Auto
+      ultrapassou_linha: finalDraft.auto?.crossedLine || false,
+      artefatos_idade_media_auto: finalDraft.auto?.mediaArtifacts || 0,
+      artefatos_pre_historicos_auto: finalDraft.auto?.prehistoricArtifacts || 0,
+      
+      // Página 3 - Teleop
+      artefatos_idade_media_teleop: finalDraft.teleop?.mediaArtifacts || 0,
+      artefatos_pre_historicos_teleop: finalDraft.teleop?.prehistoricArtifacts || 0,
+      
+      // Página 4 - Endgame
+      estacionou_pozo: finalDraft.endgame?.estacionouPoco || false,
+      estacionou_sitio: finalDraft.endgame?.estacionouSitio || false,
+      robo_parou: finalDraft.endgame?.roboParou || false,
+      penalidades: finalDraft.endgame?.penalidades || "",
+      estrategia: finalDraft.endgame?.estrategia || "",
+      observacoes: "" // Adicione se tiver campo de observações
+    };
+    
+    console.log("=== DADOS TRANSFORMADOS PARA BACKEND ===");
+    console.log(dadosParaBackend);
+    console.log("=========================================");
+    // ============= FIM DA PARTE ADICIONADA =============
 
     // ========= ENVIO FINAL PARA O BACKEND =========
     try {
-      const response = await fetch("http://localhost:5000/api/salvar_robo", {
+      const response = await fetch("http://localhost:3080/api/salvar_robo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(finalDraft)
+        // Mude para enviar os dados transformados:
+        body: JSON.stringify(dadosParaBackend)
+        // Se quiser testar com os dados originais primeiro, mantenha:
+        // body: JSON.stringify(finalDraft)
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao enviar para o servidor");
+        // Tenta ler a resposta de erro
+        const errorText = await response.text();
+        console.error("Resposta de erro do servidor:", errorText);
+        throw new Error(`Erro ${response.status}: ${errorText}`);
       }
 
       const result = await response.json();
-      console.log("Enviado com sucesso:", result);
+      console.log("✅ Enviado com sucesso:", result);
 
-      alert("Scout enviado com sucesso!");
-      clearDraft();
-
-      // redireciona se quiser
-      window.location.href = "index.html";
+      if (result.status === 'ok') {
+        alert("✅ " + result.mensagem);
+        clearDraft();
+        // redireciona se quiser
+        window.location.href = "index.html";
+      } else {
+        alert("❌ " + (result.mensagem || "Erro ao salvar"));
+      }
 
     } catch (error) {
-      console.error("Erro ao enviar:", error);
+      console.error("💥 Erro ao enviar:", error);
       alert(
         "Erro ao enviar os dados para o servidor.\n" +
-        "Os dados NÃO foram perdidos (draft mantido)."
+        "Os dados NÃO foram perdidos (draft mantido).\n" +
+        "Detalhes: " + error.message
       );
     }
   });

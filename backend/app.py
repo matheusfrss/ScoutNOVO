@@ -209,34 +209,3 @@ def home():
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3080)
 
-@app.route("/api/robos", methods=["GET"])
-def listar_robos():
-    """Lista todos os robôs cadastrados"""
-    try:
-        headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}"
-        }
-        
-        resposta = requests.get(
-            f"{SUPABASE_URL}/rest/v1/robos?select=*&order=id.desc",
-            headers=headers
-        )
-        
-        if resposta.status_code == 200:
-            return jsonify({
-                "status": "ok",
-                "total": len(resposta.json()),
-                "dados": resposta.json()
-            })
-        else:
-            return jsonify({
-                "status": "erro",
-                "mensagem": f"Erro ao buscar dados: {resposta.text}"
-            }), 500
-            
-    except Exception as erro:
-        return jsonify({
-            "status": "erro",
-            "mensagem": str(erro)
-        }), 500
