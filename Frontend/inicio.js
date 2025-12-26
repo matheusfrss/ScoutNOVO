@@ -1,4 +1,4 @@
-// inicio.js
+// inicio.js - VERSÃO CORRIGIDA
 document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.getElementById("nextBtn");
 
@@ -63,18 +63,22 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // ✅ AQUI É O CORRETO
+    // ✅ CORREÇÃO: Passa apenas o objeto 'basic' para initDraft()
     initDraft({
-      matchNumber,
-      teamNumber,
-      nomeScoute,
-      matchType,
-      alliance,
-      startingPosition,
-      criadoEm: new Date().toISOString()
+      matchNumber: matchNumber,
+      teamNumber: teamNumber,
+      scouter: scouter,
+      matchType: matchType,
+      alliance: alliance,
+      startingPosition: startingPosition
     });
 
-    console.log("Draft criado:", readDraft());
+    // DEBUG: Verifique se o draft foi salvo corretamente
+    const draft = readDraft();
+    console.log("✅ Draft criado:", draft);
+    console.log("📋 Basic salvo:", draft?.basic);
+    console.log("🔍 matchNumber existe?", draft?.basic?.matchNumber);
+    console.log("🔍 teamNumber existe?", draft?.basic?.teamNumber);
 
     window.location.href = "autonomous.html";
   });

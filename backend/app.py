@@ -58,29 +58,40 @@ def salvar_robo():
             # --- Básico ---
             "num_partida": basic.get("matchNumber"),
             "num_equipe": basic.get("teamNumber"),
-            "nome_scout": basic.get("scouter"),
-            "tipo_partida": basic.get("matchType"),
-            "alianca": basic.get("alliance"),
-            "posicao_inicial": basic.get("startingPosition"),
+            "nome_scout": basic.get("scouter", ""),  # ← scouter (não scoutName)
+            "tipo_partida": basic.get("matchType", "qualificatoria"),
+            "alianca": basic.get("alliance", "vermelho"),  # ← Se não tiver, usa vermelho
+            "posicao_inicial": basic.get("startingPosition", "1"),  # ← Se não tiver, usa 1
 
-            # --- Autônomo ---
-            "autonomo": json.dumps({
-                "ultrapassou_linha": auto.get("crossedLine"),
-                "artefatos_idade_media": auto.get("mediaArtifacts", 0),
-                "artefatos_pre_historicos": auto.get("prehistoricArtifacts", 0)
-            }),
+           "autonomo": json.dumps({
+    "ultrapassou_linha": auto.get("crossedLine", False),
+    "artefatos_idade_media": (
+        auto.get("artefatosIdadeMedia")
+        or auto.get("artefatosMedios")
+        or auto.get("mediaArtifacts")
+        or 0
+    ),
+    "artefatos_pre_historicos": (
+        auto.get("artefatosPreHistoricos")
+        or auto.get("artefatosPreHistoricos")
+        or auto.get("prehistoricArtifacts")
+        or 0
+    )
+}),
 
-            # --- Teleop ---
+            # --- Teleop --- ACEITA OS NOMES QUE VOCÊ USA
             "teleop": json.dumps({
-                "artefatos_idade_media": teleop.get("mediaArtifacts", 0),
-                "artefatos_pre_historicos": teleop.get("prehistoricArtifacts", 0)
+                "artefatos_idade_media": teleop.get("artefatosMedios", 
+                                                   teleop.get("mediaArtifacts", 0)),  # ← artefatosMedios OU mediaArtifacts
+                "artefatos_pre_historicos": teleop.get("artefatosPreHistoricos", 
+                                                      teleop.get("prehistoricArtifacts", 0))  # ← artefatosPreHistoricos
             }),
 
             # --- Endgame ---
             "endgame": json.dumps({
-                "estacionou_pozo": endgame.get("estacionouPoco"),
-                "estacionou_sitio": endgame.get("estacionouSitio"),
-                "robo_parou": endgame.get("roboParou"),
+                "estacionou_pozo": endgame.get("estacionouPoco", False),
+                "estacionou_sitio": endgame.get("estacionouSitio", False),
+                "robo_parou": endgame.get("roboParou", False),
                 "penalidades": endgame.get("penalidades", ""),
                 "estrategia": endgame.get("estrategia", "")
             }),
@@ -116,11 +127,13 @@ def salvar_robo():
             res = response.json()
             return jsonify({
                 "status": "ok",
+                "mensagem": "Scouting salvo com sucesso!",
                 "id": res[0]["id"] if res else None
             })
 
         return jsonify({
-            "erro": "Falha ao salvar no Supabase",
+            "status": "erro",
+            "mensagem": "Falha ao salvar no Supabase",
             "status_code": response.status_code,
             "resposta": response.text
         }), 500
@@ -129,7 +142,8 @@ def salvar_robo():
         print("💥 ERRO:")
         print(traceback.format_exc())
         return jsonify({
-            "erro": str(e)
+            "status": "erro",
+            "mensagem": f"Erro interno: {str(e)}"
         }), 500
 
 
