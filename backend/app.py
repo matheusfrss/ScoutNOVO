@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 import json
 import traceback
 
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -15,6 +14,7 @@ CORS(app)
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 TABLE_NAME = "robos"
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")  # 🔐 senha admin
 
 # ======================
 # DEBUG DE CONFIG
@@ -24,7 +24,21 @@ print("CONFIGURAÇÃO SUPABASE")
 print("=" * 50)
 print(f"SUPABASE_URL: {'OK' if SUPABASE_URL else 'ERRO'}")
 print(f"SUPABASE_KEY: {'OK' if SUPABASE_KEY else 'ERRO'}")
+print(f"ADMIN_PASSWORD: {'OK' if ADMIN_PASSWORD else 'ERRO'}")
 print("=" * 50)
+
+# ======================
+# FUNÇÃO AUXILIAR SEGURA
+# ======================
+def pick(*values, default=0):
+    """
+    Retorna o primeiro valor que NÃO seja None.
+    Aceita 0 como valor válido.
+    """
+    for v in values:
+        if v is not None:
+            return v
+    return default
 
 # ======================
 # ROTA PRINCIPAL
@@ -58,33 +72,39 @@ def salvar_robo():
             # --- Básico ---
             "num_partida": basic.get("matchNumber"),
             "num_equipe": basic.get("teamNumber"),
-            "nome_scout": basic.get("scouter", ""),  # ← scouter (não scoutName)
+            "nome_scout": basic.get("scouter", ""),
             "tipo_partida": basic.get("matchType", "qualificatoria"),
-            "alianca": basic.get("alliance", "vermelho"),  # ← Se não tiver, usa vermelho
-            "posicao_inicial": basic.get("startingPosition", "1"),  # ← Se não tiver, usa 1
+            "alianca": basic.get("alliance", "vermelho"),
+            "posicao_inicial": basic.get("startingPosition", "1"),
 
-           "autonomo": json.dumps({
-    "ultrapassou_linha": auto.get("crossedLine", False),
-    "artefatos_idade_media": (
-        auto.get("artefatosIdadeMedia")
-        or auto.get("artefatosMedios")
-        or auto.get("mediaArtifacts")
-        or 0
-    ),
-    "artefatos_pre_historicos": (
-        auto.get("artefatosPreHistoricos")
-        or auto.get("artefatosPreHistoricos")
-        or auto.get("prehistoricArtifacts")
-        or 0
-    )
-}),
+            # --- Autônomo ---
+            "autonomo": json.dumps({
+                "ultrapassou_linha": auto.get("crossedLine", False),
+                "artefatos_idade_media": pick(
+                    auto.get("artefatosIdadeMedia"),
+                    auto.get("artefatosMedios"),
+                    auto.get("mediaArtifacts"),
+                    default=0
+                ),
+                "artefatos_pre_historicos": pick(
+                    auto.get("artefatosPreHistoricos"),
+                    auto.get("prehistoricArtifacts"),
+                    default=0
+                )
+            }),
 
-            # --- Teleop --- ACEITA OS NOMES QUE VOCÊ USA
+            # --- Teleop ---
             "teleop": json.dumps({
-                "artefatos_idade_media": teleop.get("artefatosMedios", 
-                                                   teleop.get("mediaArtifacts", 0)),  # ← artefatosMedios OU mediaArtifacts
-                "artefatos_pre_historicos": teleop.get("artefatosPreHistoricos", 
-                                                      teleop.get("prehistoricArtifacts", 0))  # ← artefatosPreHistoricos
+                "artefatos_idade_media": pick(
+                    teleop.get("artefatosMedios"),
+                    teleop.get("mediaArtifacts"),
+                    default=0
+                ),
+                "artefatos_pre_historicos": pick(
+                    teleop.get("artefatosPreHistoricos"),
+                    teleop.get("prehistoricArtifacts"),
+                    default=0
+                )
             }),
 
             # --- Endgame ---
@@ -100,10 +120,6 @@ def salvar_robo():
             "dados_json": json.dumps(dados)
         }
 
-        print("📤 Payload Supabase:")
-        print(json.dumps(payload, indent=2))
-
-        # ===== HEADERS =====
         headers = {
             "apikey": SUPABASE_KEY,
             "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -134,21 +150,62 @@ def salvar_robo():
         return jsonify({
             "status": "erro",
             "mensagem": "Falha ao salvar no Supabase",
-            "status_code": response.status_code,
             "resposta": response.text
         }), 500
 
-    except Exception as e:
+    except Exception:
         print("💥 ERRO:")
         print(traceback.format_exc())
         return jsonify({
             "status": "erro",
-            "mensagem": f"Erro interno: {str(e)}"
+            "mensagem": "Erro interno"
         }), 500
 
+# ======================
+# RESET DA COMPETIÇÃO (ADMIN)
+# ======================
+@app.route("/api/reset_competicao", methods=["POST"])
+def reset_competicao():
+    try:
+        data = request.json or {}
+        senha = data.get("senha")
+
+        if senha != ADMIN_PASSWORD:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "Senha de administrador incorreta"
+            }), 403
+
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}"
+        }
+
+        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
+
+        response = requests.delete(url, headers=headers)
+
+        if response.status_code in (200, 204):
+            return jsonify({
+                "status": "ok",
+                "mensagem": "Competição resetada com sucesso"
+            })
+
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Falha ao resetar competição",
+            "detalhes": response.text
+        }), 500
+
+    except Exception:
+        print(traceback.format_exc())
+        return jsonify({
+            "status": "erro",
+            "mensagem": "Erro interno"
+        }), 500
 
 # ======================
-# ROTAS DE TESTE
+# TESTE
 # ======================
 @app.route("/teste")
 def teste():
@@ -156,24 +213,6 @@ def teste():
         "status": "ok",
         "mensagem": "API Flask funcionando"
     })
-
-@app.route("/teste_supabase")
-def teste_supabase():
-    headers = {
-        "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}"
-    }
-
-    r = requests.get(
-        f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?limit=1",
-        headers=headers
-    )
-
-    return jsonify({
-        "status_code": r.status_code,
-        "dados": r.json() if r.status_code == 200 else r.text
-    })
-
 
 if __name__ == "__main__":
     app.run(

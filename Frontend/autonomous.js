@@ -1,7 +1,6 @@
 // autonomous.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  // garante que draft-utils existe
   if (!window.readDraft || !window.saveSection) {
     console.warn("[autonomous] draft-utils não encontrados.");
     return;
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let crossedLine = null;
 
-  // toggle SIM / NÃO
+  // SIM / NÃO
   btnYes.addEventListener("click", () => {
     crossedLine = true;
     btnYes.classList.add("active");
@@ -28,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnYes.classList.remove("active");
   });
 
-  // salvar ao ir para próxima página
   nextBtn.addEventListener("click", () => {
     const draft = readDraft();
 
@@ -42,12 +40,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    saveSection("autonomo", {
-      crossedLine,
+    // ✅ SALVA NA SEÇÃO CORRETA
+    saveSection("auto", {
+      crossedLine: crossedLine,
       artefatosIdadeMedia: Number(qtyAge.value || 0),
       artefatosPreHistoricos: Number(qtyPre.value || 0)
     });
 
-    
+    console.log("✅ AUTO SALVO:", readDraft().auto);
+
+    // segue o fluxo
+    window.location.href = "teleop.html";
   });
 });
