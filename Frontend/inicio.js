@@ -1,4 +1,6 @@
 // inicio.js - VERSÃO FINAL CORRIGIDA
+const API_URL = "https://scoutnovo.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
   // ======================
   // FORMULÁRIO INICIAL
@@ -102,14 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!confirmar) return;
 
     try {
-      const response = await fetch(
-        "http://localhost:3080/api/reset_competicao",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ senha })
-        }
-      );
+      const response = await fetch(`${API_URL}/api/reset_competicao`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ senha })
+      });
 
       const result = await response.json();
 

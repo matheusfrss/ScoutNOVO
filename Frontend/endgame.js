@@ -1,5 +1,7 @@
 // endgame.js
 
+const API_URL = "https://scoutnovo.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
   // Segurança: draft-utils precisa existir
   if (typeof readDraft !== "function" || typeof saveSection !== "function") {
@@ -92,27 +94,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const finalDraft = readDraft();
 
-    // 🔍 DEBUG FINAL
-    console.log("📤 Enviando draft COMPLETO para backend:");
+    console.log("📤 Enviando draft COMPLETO:");
     console.log(finalDraft);
 
-    // ===== ENVIO PARA BACKEND (FORMATO CORRETO) =====
     try {
-      const response = await fetch(
-        "http://localhost:3080/api/salvar_robo",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            basic: finalDraft.basic,
-            auto: finalDraft.auto,
-            teleop: finalDraft.teleop,
-            endgame: finalDraft.endgame
-          })
-        }
-      );
+      const response = await fetch(`${API_URL}/api/salvar_robo`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          basic: finalDraft.basic,
+          auto: finalDraft.auto,
+          teleop: finalDraft.teleop,
+          endgame: finalDraft.endgame
+        })
+      });
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -122,19 +119,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       console.log("✅ Enviado com sucesso:", result);
 
-      if (result.status === "ok") {
-        alert("✅ " + result.mensagem);
-        clearDraft();
-        window.location.href = "index.html";
-      } else {
-        alert("❌ " + (result.mensagem || "Erro ao salvar"));
-      }
+      alert("✅ " + result.mensagem);
+      clearDraft();
+      window.location.href = "index.html";
 
     } catch (error) {
       console.error("💥 Erro ao enviar:", error);
       alert(
-        "Erro ao enviar os dados para o servidor.\n" +
-        "Os dados NÃO foram perdidos (draft mantido).\n\n" +
+        "Erro ao enviar os dados.\n" +
+        "Os dados NÃO foram perdidos.\n\n" +
         error.message
       );
     }
