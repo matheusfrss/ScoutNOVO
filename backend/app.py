@@ -181,7 +181,7 @@ def reset_competicao():
             "Authorization": f"Bearer {SUPABASE_KEY}"
         }
 
-        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
+        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?id=neq.0"
 
         response = requests.delete(url, headers=headers)
 

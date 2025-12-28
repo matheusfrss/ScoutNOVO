@@ -1,5 +1,8 @@
-// inicio.js - VERSÃO CORRIGIDA
+// inicio.js - VERSÃO FINAL CORRIGIDA
 document.addEventListener("DOMContentLoaded", () => {
+  // ======================
+  // FORMULÁRIO INICIAL
+  // ======================
   const nextBtn = document.getElementById("nextBtn");
 
   const segBtns = document.querySelectorAll(".seg-btn");
@@ -7,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const blue = document.getElementById("blueAlliance");
   const red = document.getElementById("redAlliance");
 
-  // ===== helpers visuais =====
   function activateGroup(list, target) {
     list.forEach(btn => btn.classList.toggle("active", btn === target));
   }
@@ -22,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.classList.add("selected");
   }
 
-  // ===== eventos =====
   segBtns.forEach(btn =>
     btn.addEventListener("click", () => activateGroup(segBtns, btn))
   );
@@ -34,11 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
   blue.addEventListener("click", () => toggleAlliance(blue));
   red.addEventListener("click", () => toggleAlliance(red));
 
-  // ===== botão próximo =====
   nextBtn.addEventListener("click", () => {
-    const scouter = document.getElementById("scouter")?.value.trim();
-    const matchNumber = Number(document.getElementById("matchNumber")?.value);
-    const teamNumber = Number(document.getElementById("teamNumber")?.value);
+    const scouter = document.getElementById("scouter").value.trim();
+    const matchNumber = Number(document.getElementById("matchNumber").value);
+    const teamNumber = Number(document.getElementById("teamNumber").value);
 
     const matchType = document.querySelector(".seg-btn.active")?.dataset.type;
     const startingPosition =
@@ -51,93 +51,78 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "red"
         : null;
 
-    if (
-      !scouter ||
-      !matchNumber ||
-      !teamNumber ||
-      !matchType ||
-      !startingPosition ||
-      !alliance
-    ) {
+    if (!scouter || !matchNumber || !teamNumber || !matchType || !startingPosition || !alliance) {
       alert("Preencha TODAS as informações antes de continuar.");
       return;
     }
 
-    // ✅ CORREÇÃO: Passa apenas o objeto 'basic' para initDraft()
     initDraft({
-      matchNumber: matchNumber,
-      teamNumber: teamNumber,
-      scouter: scouter,
-      matchType: matchType,
-      alliance: alliance,
-      startingPosition: startingPosition
+      matchNumber,
+      teamNumber,
+      scouter,
+      matchType,
+      alliance,
+      startingPosition
     });
-
-    // DEBUG: Verifique se o draft foi salvo corretamente
-    const draft = readDraft();
-    console.log("✅ Draft criado:", draft);
-    console.log("📋 Basic salvo:", draft?.basic);
-    console.log("🔍 matchNumber existe?", draft?.basic?.matchNumber);
-    console.log("🔍 teamNumber existe?", draft?.basic?.teamNumber);
 
     window.location.href = "autonomous.html";
   });
-});
 
+  // ======================
+  // LOGIN / RESET
+  // ======================
+  const loginBtn = document.getElementById("loginBtn");
+  const loginModal = document.getElementById("loginModal");
+  const adminPasswordInput = document.getElementById("adminPasswordInput");
+  const adminConfirmBtn = document.getElementById("adminConfirmBtn");
+  const adminCancelBtn = document.getElementById("adminCancelBtn");
 
-// ===== LOGIN / RESET =====
-const loginBtn = document.getElementById("loginBtn");
-const loginModal = document.getElementById("loginModal");
-const adminPasswordInput = document.getElementById("adminPasswordInput");
-const adminConfirmBtn = document.getElementById("adminConfirmBtn");
-const adminCancelBtn = document.getElementById("adminCancelBtn");
+  loginBtn.addEventListener("click", () => {
+    loginModal.style.display = "flex";
+    adminPasswordInput.value = "";
+    adminPasswordInput.focus();
+  });
 
-loginBtn.addEventListener("click", () => {
-  loginModal.style.display = "flex";
-  adminPasswordInput.value = "";
-  adminPasswordInput.focus();
-});
+  adminCancelBtn.addEventListener("click", () => {
+    loginModal.style.display = "none";
+  });
 
-adminCancelBtn.addEventListener("click", () => {
-  loginModal.style.display = "none";
-});
+  adminConfirmBtn.addEventListener("click", async () => {
+    const senha = adminPasswordInput.value;
 
-adminConfirmBtn.addEventListener("click", async () => {
-  const senha = adminPasswordInput.value;
-
-  if (!senha) {
-    alert("Digite a senha");
-    return;
-  }
-
-  const confirmar = confirm(
-    "⚠️ ISSO VAI APAGAR TODOS OS DADOS.\n\nDeseja continuar?"
-  );
-
-  if (!confirmar) return;
-
-  try {
-    const response = await fetch(
-      "http://localhost:3080/api/reset_competicao",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ senha })
-      }
-    );
-
-    const result = await response.json();
-
-    if (result.status === "ok") {
-      alert("✅ Banco de dados resetado com sucesso!");
-      loginModal.style.display = "none";
-    } else {
-      alert("❌ " + result.mensagem);
+    if (!senha) {
+      alert("Digite a senha");
+      return;
     }
 
-  } catch (err) {
-    alert("Erro ao resetar banco de dados");
-  }
+    const confirmar = confirm(
+      "⚠️ ISSO VAI APAGAR TODOS OS DADOS.\n\nDeseja continuar?"
+    );
+
+    if (!confirmar) return;
+
+    try {
+      const response = await fetch(
+        "http://localhost:3080/api/reset_competicao",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ senha })
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.status === "ok") {
+        alert("✅ Banco de dados resetado com sucesso!");
+        loginModal.style.display = "none";
+      } else {
+        alert("❌ " + result.mensagem);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao resetar banco de dados");
+    }
+  });
 });
