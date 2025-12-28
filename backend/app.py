@@ -220,3 +220,10 @@ if __name__ == "__main__":
         port=3080,
         debug=True
     )
+
+@app.route("/")
+def home():
+    return jsonify({
+        "status": "ok",
+        "mensagem": "ScoutNOVO API online 🚀"
+    })
