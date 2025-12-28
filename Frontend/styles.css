@@ -449,3 +449,71 @@ button {
     padding: 12px;
   }
 }
+
+/* ===============================
+   FIX FINAL MOBILE (iOS / Safari)
+   =============================== */
+
+/* trava qualquer overflow lateral */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+/* evita bug do 100vw no iOS */
+.app {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* header não pode estourar */
+.header {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* logo + textos não empurram */
+.brand {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* inputs nunca passam da tela */
+input,
+button,
+select,
+textarea {
+  max-width: 100%;
+}
+
+/* grid mobile real */
+@media (max-width: 768px) {
+
+  .main-grid {
+    grid-template-columns: 1fr !important;
+    width: 100%;
+  }
+
+  .seg {
+    flex-wrap: wrap;
+  }
+
+  .seg-btn {
+    width: 100%;
+  }
+
+  .alliance {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pos {
+    flex-wrap: wrap;
+  }
+
+  .pos-btn {
+    flex: 1 1 30%;
+  }
+}
