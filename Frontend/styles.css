@@ -18,31 +18,39 @@
   box-sizing:border-box;
   margin:0;
   padding:0;
+  touch-action:manipulation;
 }
 
 html, body{
-  height:100%;
+  width:100%;
+  min-height:100%;
   font-family:Inter,system-ui;
+  overflow-x:hidden;
+  background:linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 80%);
 }
 
 body{
-  min-height:100vh;
-  background:linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 80%);
+  min-height:100svh;
   color:var(--accent);
-  overflow-x:hidden;
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
 /* =====================
    LAYOUT PRINCIPAL
    ===================== */
 .app{
+  width:100%;
   max-width:1180px;
   margin:20px auto;
   padding:18px;
-
-  min-height:calc(100vh - 40px);
+  min-height:100svh;
   display:flex;
   flex-direction:column;
+  overflow-x:hidden;
 }
 
 /* =====================
@@ -53,12 +61,15 @@ body{
   align-items:center;
   justify-content:space-between;
   margin-bottom:20px;
+  width:100%;
 }
 
 .brand{
   display:flex;
   align-items:center;
   gap:14px;
+  max-width:100%;
+  overflow:hidden;
 }
 
 .logo{
@@ -68,6 +79,7 @@ body{
   border:1px solid var(--border);
   background:var(--panel-bg);
   padding:6px;
+  flex-shrink:0;
 }
 
 .team{
@@ -107,6 +119,8 @@ body{
   display:grid;
   grid-template-columns:1fr 380px;
   gap:22px;
+  width:100%;
+  flex:1;
 }
 
 .card{
@@ -114,6 +128,7 @@ body{
   padding:18px;
   border-radius:var(--radius);
   border:1px solid var(--border);
+  max-width:100%;
 }
 
 .card-title{
@@ -149,12 +164,19 @@ body{
   color:var(--muted);
 }
 
+input,
+select,
+textarea,
+button{
+  max-width:100%;
+  font-size:16px;
+}
+
 input{
   background:rgba(255,255,255,0.03);
   border-radius:10px;
   border:1px solid rgba(120,170,255,0.2);
   padding:12px 14px;
-  font-size:15px;
   color:var(--accent);
   outline:none;
 }
@@ -185,11 +207,12 @@ input:focus{
 .seg{
   display:flex;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .seg-btn{
-  flex:1;
-  padding:10px;
+  flex:1 1 45%;
+  padding:12px;
   border-radius:10px;
   background:transparent;
   border:1px solid rgba(255,255,255,0.06);
@@ -207,11 +230,12 @@ input:focus{
   display:flex;
   align-items:center;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .all-btn{
   flex:1;
-  padding:10px;
+  padding:12px;
   border-radius:10px;
   border:1px solid rgba(255,255,255,0.06);
   background:transparent;
@@ -249,10 +273,12 @@ input:focus{
   display:flex;
   justify-content:center;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .pos-btn{
-  padding:8px 14px;
+  flex:1 1 30%;
+  padding:12px;
   border-radius:8px;
   border:1px solid rgba(255,255,255,0.06);
   background:transparent;
@@ -270,7 +296,7 @@ input:focus{
    ===================== */
 .footer{
   margin-top:auto;
-  padding:16px 0;
+  padding:16px 0 calc(16px + env(safe-area-inset-bottom));
   text-align:center;
   color:var(--muted);
   font-size:12px;
@@ -281,11 +307,9 @@ input:focus{
   position:absolute;
   right:16px;
   bottom:8px;
-
   background:transparent;
   border:1px solid rgba(255,255,255,0.15);
   color:rgba(255,255,255,0.6);
-
   padding:6px 12px;
   border-radius:999px;
   font-size:0.75rem;
@@ -296,48 +320,6 @@ input:focus{
   color:#5eead4;
   border-color:#5eead4;
   background:rgba(94,234,212,0.08);
-}
-
-/* =====================
-   MODAL ADMIN
-   ===================== */
-.admin-modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.6);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-}
-
-.admin-box{
-  background:#0f172a;
-  padding:24px;
-  border-radius:14px;
-  width:100%;
-  max-width:320px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.admin-box h3{
-  text-align:center;
-  color:#5eead4;
-}
-
-.admin-actions{
-  display:flex;
-  gap:10px;
-}
-
-.admin-actions button{
-  flex:1;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  cursor:pointer;
 }
 
 /* =====================
@@ -354,229 +336,23 @@ input:focus{
   }
 }
 
-/* ============================
-   FIX DEFINITIVO IOS / MOBILE
-   ============================ */
+@media(max-width:768px){
 
-html, body {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background: linear-gradient(180deg, #03061a 0%, #071635 80%);
-}
-
-/* garante altura real no iOS */
-body {
-  min-height: 100svh;
-}
-
-/* app ocupa a tela inteira */
-.app {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* evita zoom automático do Safari */
-input,
-select,
-textarea,
-button {
-  font-size: 16px !important;
-}
-
-/* conteúdo principal cresce */
-.main-grid {
-  flex: 1;
-}
-
-/* footer não cria faixa preta */
-.footer {
-  margin-top: auto;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-}
-
-/* ============================
-   MOBILE LAYOUT
-   ============================ */
-@media (max-width: 768px) {
-
-  .app {
-    padding: 14px;
+  .app{
+    padding:14px;
   }
 
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
   }
 
-  .logo {
-    width: 56px;
-    height: 56px;
+  .team{
+    font-size:18px;
   }
 
-  .team {
-    font-size: 18px;
-  }
-
-  .main-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .seg {
-    flex-wrap: wrap;
-  }
-
-  .seg-btn {
-    flex: 1 1 45%;
-    padding: 14px;
-  }
-
-  .alliance {
-    flex-direction: column;
-  }
-
-  .pos {
-    flex-wrap: wrap;
-  }
-
-  .pos-btn {
-    flex: 1 1 30%;
-    padding: 12px;
-  }
-}
-
-/* ===============================
-   FIX FINAL MOBILE (iOS / Safari)
-   =============================== */
-
-/* trava qualquer overflow lateral */
-html, body {
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
-
-/* evita bug do 100vw no iOS */
-.app {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* header não pode estourar */
-.header {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* logo + textos não empurram */
-.brand {
-  max-width: 100%;
-  overflow: hidden;
-}
-
-/* inputs nunca passam da tela */
-input,
-button,
-select,
-textarea {
-  max-width: 100%;
-}
-
-/* grid mobile real */
-@media (max-width: 768px) {
-
-  .main-grid {
-    grid-template-columns: 1fr !important;
-    width: 100%;
-  }
-
-  .seg {
-    flex-wrap: wrap;
-  }
-
-  .seg-btn {
-    width: 100%;
-  }
-
-  .alliance {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .pos {
-    flex-wrap: wrap;
-  }
-
-  .pos-btn {
-    flex: 1 1 30%;
-  }
-}
-
-/* =========================
-   FIX SAFARI iOS DEFINITIVO
-   ========================= */
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-}
-
-/* respeita áreas seguras do iPhone */
-body {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-top: env(safe-area-inset-top);
-}
-
-/* garante que nada ultrapasse a tela */
-.app,
-.header,
-.main-grid,
-.card {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* evita gesto lateral aparecer em conteúdo */
-* {
-  touch-action: manipulation;
-}
-
-/* =========================
-   MOBILE – Nº PARTIDA
-   ========================= */
-@media (max-width: 768px) {
-
-  /* quebra o grid em coluna única */
-  .grid-2 {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  /* campo Nº Partida ganha destaque */
-  #matchNumber {
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-align: center;
-    letter-spacing: 2px;
-
-    background: rgba(94,234,212,0.08);
-    border: 1px solid rgba(94,234,212,0.4);
-  }
-
-  /* label mais clara */
-  label:has(#matchNumber) .label {
-    color: #5eead4;
-    font-weight: 800;
-    text-align: center;
+  .grid-2{
+    grid-template-columns:1fr;
   }
 }
