@@ -356,3 +356,17 @@ input:focus{
     grid-template-columns:1fr;
   }
 }
+
+.admin-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none; /* 🔴 começa fechado */
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.admin-modal.active{
+  display:flex; /* 🟢 abre só quando clicar */
+}
