@@ -550,3 +550,33 @@ body {
 * {
   touch-action: manipulation;
 }
+
+/* =========================
+   MOBILE – Nº PARTIDA
+   ========================= */
+@media (max-width: 768px) {
+
+  /* quebra o grid em coluna única */
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* campo Nº Partida ganha destaque */
+  #matchNumber {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+
+    background: rgba(94,234,212,0.08);
+    border: 1px solid rgba(94,234,212,0.4);
+  }
+
+  /* label mais clara */
+  label:has(#matchNumber) .label {
+    color: #5eead4;
+    font-weight: 800;
+    text-align: center;
+  }
+}
