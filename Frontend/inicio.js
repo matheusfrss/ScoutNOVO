@@ -83,3 +83,61 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "autonomous.html";
   });
 });
+
+
+// ===== LOGIN / RESET =====
+const loginBtn = document.getElementById("loginBtn");
+const loginModal = document.getElementById("loginModal");
+const adminPasswordInput = document.getElementById("adminPasswordInput");
+const adminConfirmBtn = document.getElementById("adminConfirmBtn");
+const adminCancelBtn = document.getElementById("adminCancelBtn");
+
+loginBtn.addEventListener("click", () => {
+  loginModal.style.display = "flex";
+  adminPasswordInput.value = "";
+  adminPasswordInput.focus();
+});
+
+adminCancelBtn.addEventListener("click", () => {
+  loginModal.style.display = "none";
+});
+
+adminConfirmBtn.addEventListener("click", async () => {
+  const senha = adminPasswordInput.value;
+
+  if (!senha) {
+    alert("Digite a senha");
+    return;
+  }
+
+  const confirmar = confirm(
+    "⚠️ ISSO VAI APAGAR TODOS OS DADOS.\n\nDeseja continuar?"
+  );
+
+  if (!confirmar) return;
+
+  try {
+    const response = await fetch(
+      "http://localhost:3080/api/reset_competicao",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ senha })
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.status === "ok") {
+      alert("✅ Banco de dados resetado com sucesso!");
+      loginModal.style.display = "none";
+    } else {
+      alert("❌ " + result.mensagem);
+    }
+
+  } catch (err) {
+    alert("Erro ao resetar banco de dados");
+  }
+});
