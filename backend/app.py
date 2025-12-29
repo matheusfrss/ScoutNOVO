@@ -14,7 +14,7 @@ CORS(app)
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 TABLE_NAME = "robos"
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")  # 🔐 senha admin
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 # ======================
 # DEBUG DE CONFIG
@@ -31,10 +31,6 @@ print("=" * 50)
 # FUNÇÃO AUXILIAR SEGURA
 # ======================
 def pick(*values, default=0):
-    """
-    Retorna o primeiro valor que NÃO seja None.
-    Aceita 0 como valor válido.
-    """
     for v in values:
         if v is not None:
             return v
@@ -67,7 +63,7 @@ def salvar_robo():
                 "erro": "num_partida ou num_equipe ausente"
             }), 400
 
-        # ===== PAYLOAD SUPABASE =====
+        # ===== PAYLOAD SUPABASE (JSONB REAL) =====
         payload = {
             # --- Básico ---
             "num_partida": basic.get("matchNumber"),
@@ -78,7 +74,7 @@ def salvar_robo():
             "posicao_inicial": basic.get("startingPosition", "1"),
 
             # --- Autônomo ---
-            "autonomo": json.dumps({
+            "autonomo": {
                 "ultrapassou_linha": auto.get("crossedLine", False),
                 "artefatos_idade_media": pick(
                     auto.get("artefatosIdadeMedia"),
@@ -91,10 +87,10 @@ def salvar_robo():
                     auto.get("prehistoricArtifacts"),
                     default=0
                 )
-            }),
+            },
 
             # --- Teleop ---
-            "teleop": json.dumps({
+            "teleop": {
                 "artefatos_idade_media": pick(
                     teleop.get("artefatosMedios"),
                     teleop.get("mediaArtifacts"),
@@ -105,18 +101,18 @@ def salvar_robo():
                     teleop.get("prehistoricArtifacts"),
                     default=0
                 )
-            }),
+            },
 
             # --- Endgame ---
-            "endgame": json.dumps({
+            "endgame": {
                 "estacionou_pozo": endgame.get("estacionouPoco", False),
                 "estacionou_sitio": endgame.get("estacionouSitio", False),
                 "robo_parou": endgame.get("roboParou", False),
                 "penalidades": endgame.get("penalidades", ""),
                 "estrategia": endgame.get("estrategia", "")
-            }),
+            },
 
-            # --- Backup completo ---
+            # --- Backup completo (string OK) ---
             "dados_json": json.dumps(dados)
         }
 
@@ -214,16 +210,16 @@ def teste():
         "mensagem": "API Flask funcionando"
     })
 
-if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=3080,
-        debug=True
-    )
-
 @app.route("/")
 def home():
     return jsonify({
         "status": "ok",
         "mensagem": "ScoutNOVO API online 🚀"
     })
+
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=3080,
+        debug=True
+    )
