@@ -31,19 +31,64 @@
     <form id="teleopForm" class="card form-card" autocomplete="off">
       <h2 class="card-title">Fase Teleoperada</h2>
 
-      <div class="grid-1">
-        <label class="field">
-          <span class="label">Quant. artefatos (idade média) entregues no MUSEU</span>
-          <input id="qtyAgeTele" type="number" min="0" step="1" placeholder="0">
-        </label>
-      </div>
+<!-- Ciclo de pontuação (bolinha +1) -->
+<div class="grid-1">
+  <div class="field">
+    <span class="label">Ciclo de pontuação (toda vez que o robô descarregar no HUB)</span>
 
-      <div class="grid-1">
-        <label class="field">
-          <span class="label">Quant. artefatos (pré-históricos) entregues no MUSEU</span>
-          <input id="qtyPreTele" type="number" min="0" step="1" placeholder="0">
-        </label>
-      </div>
+    <div class="ciclo-row">
+      <button id="maisCiclo" class="bubble-btn" type="button" aria-label="Adicionar +1"></button>
+
+      <input id="cicloPontuacao" class="ciclo-input" type="number" min="0" step="1" value="0" readonly>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Local de lançamento -->
+<div class="grid-1">
+  <div class="field">
+    <span class="label">Local de lançamento</span>
+
+    <div class="segmented" data-name="localLancamento">
+      <button type="button" class="seg-btn" data-value="Dentro da ZONA DA ALIANÇA">Dentro da ZONA DA ALIANÇA</button>
+      <button type="button" class="seg-btn" data-value="Fora da ZONA DA ALIANÇA">Fora da ZONA DA ALIANÇA</button>
+    </div>
+
+    <input type="hidden" name="localLancamento" id="localLancamento" value="">
+  </div>
+</div>
+
+<!-- Volume por ciclo -->
+<div class="grid-1">
+  <div class="field">
+    <span class="label">Volume por ciclo (Volume de FUELS coletados pelo robô)</span>
+
+    <div class="segmented" data-name="volumePorCiclo">
+      <button type="button" class="seg-btn" data-value="1-1">1–1</button>
+      <button type="button" class="seg-btn" data-value="Pequenos lotes">Pequenos lotes</button>
+      <button type="button" class="seg-btn" data-value="Fluxo contínuo">Fluxo contínuo</button>
+    </div>
+
+    <input type="hidden" name="volumePorCiclo" id="volumePorCiclo" value="">
+  </div>
+</div>
+
+<!-- HUB INATIVO -->
+<div class="grid-1">
+  <div class="field">
+    <span class="label">HUB INATIVO</span>
+
+    <div class="segmented stacked" data-name="hubInativo">
+      <button type="button" class="seg-btn" data-value="Estocagem">Estocagem — Coleta FUEL para o próximo turno</button>
+      <button type="button" class="seg-btn" data-value="Defesa">Defesa — Atrapalha a aliança adversária</button>
+      <button type="button" class="seg-btn" data-value="Parado">Parado — Pontua no HUB inativo ou fica parado</button>
+    </div>
+
+    <input type="hidden" name="hubInativo" id="hubInativo" value="">
+  </div>
+</div>
+
 
     </form>
   </section>
@@ -55,7 +100,7 @@
 </main>
 
 <div id="toast" class="toast"></div>
-  <script src="./draft-utils.js"></script>
-  <script src="./teleop.js"></script>
+<script src="./draft-utils.js"></script>
+<script src="./teleop.js"></script>
 </body>
 </html>

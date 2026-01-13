@@ -21,8 +21,8 @@
     </div>
 
     <div class="meta-actions">
-    <button id="backBtn" class="btn ghost" type="button" onclick="window.location.href='index.html'">Anterior</button>
-    <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='teleop.html'">Próximo</button>
+      <button id="backBtn" class="btn ghost" type="button" onclick="window.location.href='index.html'">Anterior</button>
+      <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='teleop.html'">Próximo</button>
     </div>
   </header>
 
@@ -30,29 +30,54 @@
     <form id="autoForm" class="card form-card" autocomplete="off" novalidate>
       <h2 class="card-title">Fase Autônoma</h2>
 
+      <!-- Linha de largada -->
       <div class="grid-1">
-        <label class="label">O robô ultrapassou a linha de chegada?</label>
+        <label class="label">Saiu da linha de largada?</label>
         <div class="auto-toggle" style="margin-top:10px;">
-          <button id="crossYes" type="button" class="auto-btn">SIM</button>
-          <button id="crossNo" type="button" class="auto-btn">NÃO</button>
+          <button id="startLineYes" type="button" class="auto-btn">SIM</button>
+          <button id="startLineNo" type="button" class="auto-btn">NÃO</button>
         </div>
       </div>
 
+      <!-- Coleta na zona neutra -->
       <div class="grid-1">
-        <label class="field">
-          <span class="label">Quant. artefatos (idade média) entregues no MUSEU</span>
-          <input id="qtyAge" type="number" min="0" step="1" placeholder="0">
-        </label>
+        <label class="label">Buscou combustível na zona central?</label>
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="fuelYes" type="button" class="auto-btn">SIM</button>
+          <button id="fuelNo" type="button" class="auto-btn">NÃO</button>
+        </div>
       </div>
 
+      <!-- Pontuação no HUB -->
       <div class="grid-1">
-        <label class="field">
-          <span class="label">Quant. artefatos (pré-históricos) entregues no MUSEU</span>
-          <input id="qtyPre" type="number" min="0" step="1" placeholder="0">
-        </label>
+        <label class="label">Pontuação no HUB:</label>
+        <div class="auto-toggle" style="margin-top:10px; flex-wrap:wrap;">
+          <button id="hub0" type="button" class="auto-btn">0</button>
+          <button id="hub1_8" type="button" class="auto-btn">1–8</button>
+          <button id="hub9_16" type="button" class="auto-btn">9–16</button>
+          <button id="hub17" type="button" class="auto-btn">17+</button>
+        </div>
       </div>
+
+      <!-- Climber -->
+      <div class="grid-1">
+        <label class="label">Concluiu a escalada?</label>
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="climbLevel1" type="button" class="auto-btn">NÍVEL 1</button>
+          <button id="climbNo" type="button" class="auto-btn">NÃO CONCLUIU</button>
+        </div>
+      </div>
+
+      <!-- Falha técnica -->
+      <div class="grid-1">
+        <label class="label">Robô foi desativado?</label>
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="disabledYes" type="button" class="auto-btn">SIM</button>
+          <button id="disabledNo" type="button" class="auto-btn">NÃO</button>
+        </div>
+      </div>
+
     </form>
-
   </section>
 
   <footer class="footer">

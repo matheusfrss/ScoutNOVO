@@ -28,49 +28,65 @@
       <form id="endForm" class="card form-card" autocomplete="off" novalidate>
         <h2 class="card-title">Fase Endgame</h2>
 
-
+        <!-- End Game: 30s finais -->
         <div class="grid-1">
-          <label class="label">Estacionou completamente no POÇO DE ESCAVAÇÃO?</label>
-          <div class="toggle-row">
-            <button id="pitYes" type="button" class="toggle-btn">SIM</button>
-            <button id="pitNo"  type="button" class="toggle-btn">NÃO</button>
-          </div>
+          <label class="label">End Game: 30s finais</label>
         </div>
 
+        <!-- Volume por ciclo -->
         <div class="grid-1">
-          <label class="label">Estacionou parcialmente dentro do SÍTIO ARQUEOLÓGICO?</label>
-          <div class="toggle-row">
-            <button id="siteYes" type="button" class="toggle-btn">SIM</button>
-            <button id="siteNo"  type="button" class="toggle-btn">NÃO</button>
-          </div>
-        </div>
-
-        <div class="grid-1">
-          <label class="label">Robô PAROU?</label>
-          <div class="toggle-row">
-            <button id="stoppedYes" type="button" class="toggle-btn">SIM</button>
-            <button id="stoppedNo"  type="button" class="toggle-btn">NÃO</button>
-          </div>
-        </div>
-
-        <div class="grid-1">
-          <label class="field">
-            <span class="label">Penalidades (descreva se houver)</span>
-            <textarea id="penalties" rows="4" placeholder="Descreva penalidades aqui..." ></textarea>
-          </label>
-        </div>
-
-        
-        <div class="grid-1">
-          <label class="label">Estratégia do robô</label>
+          <label class="label">Volume por ciclo:</label>
           <div style="margin-top:8px;">
-            <select id="strategy" class="select-field">
-              <option value="">Selecione - Robô de Ataque ou Defesa </option>
-              <option value="defesa">Robô de DEFESA</option>
-              <option value="ataque">Robô de ATAQUE</option>
+            <select id="volumeCiclo" class="select-field">
+              <option value="">Selecione</option>
+              <option value="1-1">1-1</option>
+              <option value="pequenos-lotes">Pequenos lotes</option>
+              <option value="fluxo-continuo">Fluxo contínuo</option>
             </select>
           </div>
         </div>
+
+        <!-- Climber -->
+        <div class="grid-1">
+          <label class="label">Climber:</label>
+          <label class="label" style="margin-top:10px;">Robô tentou escalar?</label>
+          <div class="toggle-row">
+            <button id="climbYes" type="button" class="toggle-btn">SIM</button>
+            <button id="climbNo"  type="button" class="toggle-btn">NÃO</button>
+          </div>
+        </div>
+
+        <!-- Nível -->
+        <div class="grid-1">
+          <label class="label">Nível atingido:</label>
+          <div style="margin-top:8px;">
+            <select id="nivelClimber" class="select-field">
+              <option value="">Selecione</option>
+              <option value="1">Nível 1</option>
+              <option value="2">Nível 2</option>
+              <option value="3">Nível 3</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Penalidades -->
+        <div class="grid-1">
+          <label class="label">Penalidades:</label>
+          <label class="label" style="margin-top:10px;">Recebeu cartão amarelo?</label>
+          <div class="toggle-row">
+            <button id="yellowYes" type="button" class="toggle-btn">SIM</button>
+            <button id="yellowNo"  type="button" class="toggle-btn">NÃO</button>
+          </div>
+        </div>
+
+        <!-- Observações -->
+        <div class="grid-1">
+          <label class="field">
+            <span class="label">Observações:</span>
+            <textarea id="observacoes" rows="4" placeholder="Escreva observações aqui..."></textarea>
+          </label>
+        </div>
+
       </form>
     </section>
 

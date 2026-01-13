@@ -1,40 +1,325 @@
 body {
   background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 .main-grid {
   display: grid;
   grid-template-columns: 1fr;
   justify-items: center;
-  gap: 22px;
+  gap: 28px;
+  padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .form-card {
   max-width: 700px;
+  width: 100%;
   margin: 0 auto;
+  padding: 32px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(120, 170, 255, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
   text-align: center;
 }
 
 .card-title {
   color: var(--blue-2);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+}
+
+.card-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--blue-2);
+  border-radius: 2px;
+  opacity: 0.4;
 }
 
 .field {
   text-align: left;
+  margin-bottom: 22px;
 }
 
 input[type="number"] {
-  background: rgba(255,255,255,0.03);
-  border-radius: 10px;
-  border: 1px solid rgba(120,170,255,0.18);
-  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  border: 1.5px solid rgba(120, 170, 255, 0.15);
+  padding: 16px 18px;
   color: var(--accent-text);
   width: 100%;
+  font-size: 15px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: rgba(120, 170, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(120, 170, 255, 0.1);
 }
 
 input::placeholder {
-  color: rgba(255,255,255,0.28);
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 400;
+}
+
+.bubble-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  align-items: flex-start;
+}
+
+/* Sistema modernizado de bolinhas */
+.bubble-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: #ffd400;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(255, 212, 0, 0.3);
+  margin-left: 18px;
+}
+
+.bubble-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+  border-radius: 50% 50% 0 0;
+}
+
+.bubble-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255, 212, 0, 0.4);
+}
+
+.bubble-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 12px rgba(255, 212, 0, 0.2);
+}
+
+.bubble-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.bubble-col input {
+  width: 100px;
+  text-align: center;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.ciclo-box {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ciclo-value {
+  width: 140px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.ciclo-value::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+}
+
+.ciclo-value input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-weight: 800;
+  font-size: 32px;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.ciclo-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.bubble-btn.small {
+  width: 44px;
+  height: 44px;
+  box-shadow: 0 4px 12px rgba(255, 212, 0, 0.25);
+}
+
+.ciclo-input {
+  width: 100px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.ciclo-input:focus {
+  border-color: rgba(120, 170, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(120, 170, 255, 0.1);
+}
+
+.segmented {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.segmented.stacked {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seg-btn {
+  padding: 16px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+.seg-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.seg-btn:hover::before {
+  left: 100%;
+}
+
+.seg-btn:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.05));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ QUANDO APERTAR (CLICAR SEGURANDO) - IGUAL O PRINT */
+.seg-btn:active {
+  background: linear-gradient(180deg, #88DBFF 0%, #63C7FF 100%);
+  border-color: rgba(0, 140, 255, 0.9);
+  color: #000;
+  transform: translateY(1px);
+  box-shadow: 0 6px 14px rgba(99, 199, 255, 0.35);
+}
+
+.seg-btn.active {
+  background: linear-gradient(180deg, #88DBFF 0%, #63C7FF 100%);
+  border-color: rgba(0, 140, 255, 0.9);
+  color: #000;
+  box-shadow: 0 10px 22px rgba(99, 199, 255, 0.35);
+}
+
+/* Animações sutis */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-card > * {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .form-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  
+  .seg-btn {
+    min-width: calc(50% - 8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-grid {
+    padding: 16px 12px;
+    gap: 20px;
+  }
+  
+  .seg-btn {
+    min-width: 100%;
+  }
+  
+  .ciclo-row {
+    flex-direction: column;
+    gap: 12px;
+  }
 }

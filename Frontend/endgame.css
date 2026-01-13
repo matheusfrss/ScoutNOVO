@@ -1,97 +1,146 @@
-
-
 body{
   background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
   color: var(--accent-text);
+  margin: 0;
 }
 
-/* centraliza o formulário e limita largura */
+/* ===== CONTAINER PRINCIPAL ===== */
 .main-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  justify-items:center;
-  gap:20px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;   /* centraliza horizontal */
+  align-items: flex-start;   /* mantém no topo */
+  padding: 40px 16px;
 }
 
+/* ===== CARD DO FORMULÁRIO ===== */
 .form-card{
-  max-width:720px;
+  width: 100%;
+  max-width: 720px;
   margin: 0 auto;
-  text-align: left; /* labels left for readability */
+  text-align: left;
 }
 
-/* título */
+/* ===== TÍTULO ===== */
 .card-title{
   color: var(--blue-2);
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:14px;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 14px;
 }
 
-/* Toggle row (SIM / NÃO) */
+/* ===== BOTÕES SIM / NÃO ===== */
 .toggle-row{
-  display:flex;
-  gap:12px;
-  margin-top:10px;
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .toggle-btn{
-  flex:1;
-  padding:12px 14px;
-  border-radius:10px;
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
   background: rgba(255,255,255,0.02);
-  border:1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
   color: var(--silver);
-  font-weight:700;
-  cursor:pointer;
-  transition: transform .12s ease, background .12s ease;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
 }
 
 .toggle-btn:hover{
   transform: translateY(-2px);
 }
 
+/* ===== BOTÃO ATIVO ===== */
 .toggle-btn.active{
-  background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
-  color:#02101f;
-  border-color: transparent;
+  background: #61c9ff;
+  color: #fcf9f9;
+  border: 1px solid rgba(255,255,255,0.25);
+
+  /* brilho + sombra */
+  box-shadow:
+    0 0 18px rgba(97, 201, 255, 0.55),
+    0 6px 18px rgba(0, 0, 0, 0.35);
+
   transform: translateY(-2px);
 }
 
-/* textarea */
+/* ===== TEXTAREA ===== */
 textarea{
-  width:100%;
-  min-height:92px;
-  padding:12px 14px;
-  border-radius:10px;
-  border:1px solid rgba(120,170,255,0.18);
+  width: 100%;
+  min-height: 92px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(120,170,255,0.18);
   background: rgba(255,255,255,0.03);
-  color:var(--accent-text);
+  color: var(--accent-text);
   resize: vertical;
-  box-sizing:border-box;
+  box-sizing: border-box;
 }
 
-/* select */
+/* ===== SELECT ===== */
+.select-field{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(120,170,255,0.18);
+  background: rgba(255,255,255,0.02);
+  color: var(--accent-text);
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  padding: 18px 0;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast .item{
+  background: rgba(10,20,36,0.95);
+  color: var(--accent-text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+  pointer-events: auto;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 980px){
+  .form-card{
+    padding: 16px;
+  }
+
+  .toggle-row{
+    flex-direction: row;
+  }
+}
+
 .select-field{
   width:100%;
   padding:12px 14px;
   border-radius:10px;
   border:1px solid rgba(120,170,255,0.18);
   background: rgba(255,255,255,0.02);
-  color:var(--accent-text);
+  color: #fff !important; /* texto branco */
   font-weight:600;
   box-sizing:border-box;
+  appearance: none; /* tira estilo padrão */
 }
 
-/* footer padding */
-.footer{ padding:18px 0; text-align:center; color:var(--muted); }
-
-/* toast */
-.toast{ position:fixed; right:20px; bottom:20px; z-index:9999; pointer-events:none; }
-.toast .item{ background: rgba(10,20,36,0.95); color:var(--accent-text); padding:10px 12px; border-radius:8px; margin-top:8px; pointer-events:auto; }
-
-/* responsivo */
-@media (max-width:980px){
-  .form-card{ padding: 16px; }
-  .toggle-row{ flex-direction: row; }
+/* opções do select */
+.select-field option{
+  color: #fff;           /* texto branco */
+  background: #071635;   /* fundo escuro */
 }
-
