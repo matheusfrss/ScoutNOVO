@@ -185,8 +185,9 @@ def reset_competicao():
 def teste():
     return jsonify({
         "status": "ok",
-        "mensagem": "API Flask funcionando"
+        "mensagem": "API Flask funcionando ✅ VERSAO NOVA 2026-01-13"
     })
+
 
 
 @app.route("/")
