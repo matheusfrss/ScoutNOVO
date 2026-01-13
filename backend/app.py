@@ -28,15 +28,6 @@ print(f"ADMIN_PASSWORD: {'OK' if ADMIN_PASSWORD else 'ERRO'}")
 print("=" * 50)
 
 # ======================
-# FUNÇÃO AUXILIAR SEGURA
-# ======================
-def pick(*values, default=0):
-    for v in values:
-        if v is not None:
-            return v
-    return default
-
-# ======================
 # ROTA PRINCIPAL
 # ======================
 @app.route("/api/salvar_robo", methods=["POST"])
@@ -44,12 +35,13 @@ def salvar_robo():
     try:
         print("🔵 /api/salvar_robo chamado")
 
-        dados = request.json
+        dados = request.get_json(silent=True)
+
         print("📥 JSON recebido:")
-        print(json.dumps(dados, indent=2))
+        print(json.dumps(dados, indent=2, ensure_ascii=False))
 
         if not dados:
-            return jsonify({"erro": "JSON vazio"}), 400
+            return jsonify({"status": "erro", "mensagem": "JSON vazio"}), 400
 
         # ===== SEÇÕES =====
         basic = dados.get("basic", {})
@@ -60,60 +52,33 @@ def salvar_robo():
         # ===== VALIDAÇÃO =====
         if not basic.get("matchNumber") or not basic.get("teamNumber"):
             return jsonify({
-                "erro": "num_partida ou num_equipe ausente"
+                "status": "erro",
+                "mensagem": "matchNumber ou teamNumber ausente"
             }), 400
 
-        # ===== PAYLOAD SUPABASE (JSONB REAL) =====
+        if not SUPABASE_URL or not SUPABASE_KEY:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "Supabase não configurado (env faltando)"
+            }), 500
+
+        # ✅ PAYLOAD: salva exatamente como veio do Front
         payload = {
             # --- Básico ---
             "num_partida": basic.get("matchNumber"),
             "num_equipe": basic.get("teamNumber"),
             "nome_scout": basic.get("scouter", ""),
-            "tipo_partida": basic.get("matchType", "qualificatoria"),
-            "alianca": basic.get("alliance", "vermelho"),
-            "posicao_inicial": basic.get("startingPosition", "1"),
+            "tipo_partida": basic.get("matchType", ""),
+            "alianca": basic.get("alliance", ""),
+            "posicao_inicial": basic.get("startingPosition", ""),
 
-            # --- Autônomo ---
-            "autonomo": {
-                "ultrapassou_linha": auto.get("crossedLine", False),
-                "artefatos_idade_media": pick(
-                    auto.get("artefatosIdadeMedia"),
-                    auto.get("artefatosMedios"),
-                    auto.get("mediaArtifacts"),
-                    default=0
-                ),
-                "artefatos_pre_historicos": pick(
-                    auto.get("artefatosPreHistoricos"),
-                    auto.get("prehistoricArtifacts"),
-                    default=0
-                )
-            },
+            # --- JSONB RAW (sem renomear chaves) ---
+            "autonomo": auto,
+            "teleop": teleop,
+            "endgame": endgame,
 
-            # --- Teleop ---
-            "teleop": {
-                "artefatos_idade_media": pick(
-                    teleop.get("artefatosMedios"),
-                    teleop.get("mediaArtifacts"),
-                    default=0
-                ),
-                "artefatos_pre_historicos": pick(
-                    teleop.get("artefatosPreHistoricos"),
-                    teleop.get("prehistoricArtifacts"),
-                    default=0
-                )
-            },
-
-            # --- Endgame ---
-            "endgame": {
-                "estacionou_pozo": endgame.get("estacionouPoco", False),
-                "estacionou_sitio": endgame.get("estacionouSitio", False),
-                "robo_parou": endgame.get("roboParou", False),
-                "penalidades": endgame.get("penalidades", ""),
-                "estrategia": endgame.get("estrategia", "")
-            },
-
-            # --- Backup completo (string OK) ---
-            "dados_json": json.dumps(dados)
+            # --- Backup completo ---
+            "dados_json": dados
         }
 
         headers = {
@@ -125,12 +90,7 @@ def salvar_robo():
 
         url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
 
-        response = requests.post(
-            url,
-            headers=headers,
-            json=payload,
-            timeout=10
-        )
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
 
         print(f"📨 Supabase status: {response.status_code}")
         print(response.text)
@@ -157,14 +117,21 @@ def salvar_robo():
             "mensagem": "Erro interno"
         }), 500
 
+
 # ======================
 # RESET DA COMPETIÇÃO (ADMIN)
 # ======================
 @app.route("/api/reset_competicao", methods=["POST"])
 def reset_competicao():
     try:
-        data = request.json or {}
+        data = request.get_json(silent=True) or {}
         senha = data.get("senha")
+
+        if not ADMIN_PASSWORD:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "ADMIN_PASSWORD não configurado no servidor"
+            }), 500
 
         if senha != ADMIN_PASSWORD:
             return jsonify({
@@ -172,14 +139,24 @@ def reset_competicao():
                 "mensagem": "Senha de administrador incorreta"
             }), 403
 
+        if not SUPABASE_URL or not SUPABASE_KEY:
+            return jsonify({
+                "status": "erro",
+                "mensagem": "Supabase não configurado (env faltando)"
+            }), 500
+
         headers = {
             "apikey": SUPABASE_KEY,
             "Authorization": f"Bearer {SUPABASE_KEY}"
         }
 
-        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?id=neq.0"
+        # ✅ apaga tudo que tiver id > 0
+        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?id=gt.0"
 
-        response = requests.delete(url, headers=headers)
+        response = requests.delete(url, headers=headers, timeout=10)
+
+        print(f"🧹 Reset Supabase status: {response.status_code}")
+        print(response.text)
 
         if response.status_code in (200, 204):
             return jsonify({
@@ -200,6 +177,7 @@ def reset_competicao():
             "mensagem": "Erro interno"
         }), 500
 
+
 # ======================
 # TESTE
 # ======================
@@ -210,12 +188,14 @@ def teste():
         "mensagem": "API Flask funcionando"
     })
 
+
 @app.route("/")
 def home():
     return jsonify({
         "status": "ok",
         "mensagem": "ScoutNOVO API online 🚀"
     })
+
 
 if __name__ == "__main__":
     app.run(
