@@ -88,44 +88,28 @@ input::placeholder {
   align-items: flex-start;
 }
 
-/* Sistema modernizado de bolinhas */
-.bubble-btn {
-  width: 52px;
-  height: 52px;
+.bubble-btn{
+  width: 150px;
+  height: 130px;
+  border: none;             /* ✅ remove borda */
   border-radius: 50%;
-  border: none;
   cursor: pointer;
-  background: #ffd400;
-  position: relative;
+
+  background: url("./combustivelsemfundo.png") center/contain no-repeat;
+
+  box-shadow: none;         /* ✅ remove halo */
+  background-color: transparent;
   overflow: hidden;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 16px rgba(255, 212, 0, 0.3);
-  margin-left: 18px;
+
+  transition: transform 0.12s ease;
 }
 
-.bubble-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
-  border-radius: 50% 50% 0 0;
+/* ✅ só um “pop” quando clicar */
+.bubble-btn:active{
+  transform: translateY(-8px) scale(1.02);
 }
 
-.bubble-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(255, 212, 0, 0.4);
-}
 
-.bubble-btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 4px 12px rgba(255, 212, 0, 0.2);
-}
 
 .bubble-btn:disabled {
   opacity: 0.5;
@@ -184,16 +168,17 @@ input::placeholder {
   letter-spacing: -0.5px;
 }
 
-.ciclo-row {
+.ciclo-row{
   margin-top: 12px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 18px;
+
+  padding: 0;              /* ✅ tira o bloco */
+  background: transparent;  /* ✅ tira o fundo */
+  border: none;             /* ✅ tira borda */
 }
+
 
 .bubble-btn.small {
   width: 44px;
