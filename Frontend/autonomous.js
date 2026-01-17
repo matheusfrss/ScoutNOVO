@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---- ESTADOS ----
   let leftStartLine = null;     // boolean
   let gotFuel = null;           // boolean
-  let hubScore = null;          // number/string
+  let hubScore = null;          // string
   let climbResult = null;       // string
   let wasDisabled = null;       // boolean
 
@@ -59,76 +59,123 @@ document.addEventListener("DOMContentLoaded", () => {
     activeButton.classList.add("active");
   };
 
+  // ✅ Verifica se tudo foi respondido
+  const allAnswered = () => {
+    return (
+      leftStartLine !== null &&
+      gotFuel !== null &&
+      hubScore !== null &&
+      climbResult !== null &&
+      wasDisabled !== null
+    );
+  };
+
+  // ✅ Atualiza o botão "Próximo" (bloqueado/liberado)
+  const updateNextButton = () => {
+    const ok = allAnswered();
+
+    nextBtn.disabled = !ok;
+
+    // Estilo visual (não altera sua paleta)
+    if (nextBtn.disabled) {
+      nextBtn.style.opacity = "0.4";
+      nextBtn.style.cursor = "not-allowed";
+    } else {
+      nextBtn.style.opacity = "1";
+      nextBtn.style.cursor = "pointer";
+    }
+
+    return ok;
+  };
+
   // ---- LISTENERS ----
 
   // Linha de largada
   startLineYes.addEventListener("click", () => {
     leftStartLine = true;
     setActive([startLineYes, startLineNo], startLineYes);
+    updateNextButton();
   });
 
   startLineNo.addEventListener("click", () => {
     leftStartLine = false;
     setActive([startLineYes, startLineNo], startLineNo);
+    updateNextButton();
   });
 
   // Combustível
   fuelYes.addEventListener("click", () => {
     gotFuel = true;
     setActive([fuelYes, fuelNo], fuelYes);
+    updateNextButton();
   });
 
   fuelNo.addEventListener("click", () => {
     gotFuel = false;
     setActive([fuelYes, fuelNo], fuelNo);
+    updateNextButton();
   });
 
   // HUB
   hub0.addEventListener("click", () => {
     hubScore = "0";
     setActive([hub0, hub1_8, hub9_16, hub17], hub0);
+    updateNextButton();
   });
 
   hub1_8.addEventListener("click", () => {
     hubScore = "1-8";
     setActive([hub0, hub1_8, hub9_16, hub17], hub1_8);
+    updateNextButton();
   });
 
   hub9_16.addEventListener("click", () => {
     hubScore = "9-16";
     setActive([hub0, hub1_8, hub9_16, hub17], hub9_16);
+    updateNextButton();
   });
 
   hub17.addEventListener("click", () => {
     hubScore = "17+";
     setActive([hub0, hub1_8, hub9_16, hub17], hub17);
+    updateNextButton();
   });
 
   // Escalada
   climbLevel1.addEventListener("click", () => {
     climbResult = "LEVEL_1";
     setActive([climbLevel1, climbNo], climbLevel1);
+    updateNextButton();
   });
 
   climbNo.addEventListener("click", () => {
     climbResult = "NOT_COMPLETED";
     setActive([climbLevel1, climbNo], climbNo);
+    updateNextButton();
   });
 
   // Desativado
   disabledYes.addEventListener("click", () => {
     wasDisabled = true;
     setActive([disabledYes, disabledNo], disabledYes);
+    updateNextButton();
   });
 
   disabledNo.addEventListener("click", () => {
     wasDisabled = false;
     setActive([disabledYes, disabledNo], disabledNo);
+    updateNextButton();
   });
 
   // Próximo (salvar e ir)
   nextBtn.addEventListener("click", (e) => {
     e.preventDefault(); // impede qualquer navegação automática
+
+    // ✅ Se o botão estiver desativado, nem deixa avançar
+    if (!allAnswered()) {
+      alert("Preencha todas as perguntas antes de avançar ✅");
+      return;
+    }
 
     const draft = readDraft();
     if (!draft) {
@@ -136,33 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // validações
-    if (leftStartLine === null) {
-      alert("Informe se saiu da linha de largada.");
-      return;
-    }
-
-    if (gotFuel === null) {
-      alert("Informe se buscou combustível na zona central.");
-      return;
-    }
-
-    if (hubScore === null) {
-      alert("Informe a pontuação no HUB.");
-      return;
-    }
-
-    if (climbResult === null) {
-      alert("Informe se concluiu a escalada.");
-      return;
-    }
-
-    if (wasDisabled === null) {
-      alert("Informe se o robô foi desativado.");
-      return;
-    }
-
-    // ✅ SALVAR NA SEÇÃO AUTO (SEM MEXER NO DRAFT)
+    // ✅ SALVAR NA SEÇÃO AUTO
     saveSection("auto", {
       leftStartLine,
       gotFuel,
@@ -176,4 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // segue o fluxo
     window.location.href = "teleop.html";
   });
+
+  // ✅ Estado inicial: Próximo começa bloqueado
+  updateNextButton();
 });
