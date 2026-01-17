@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const finishBtn = document.getElementById("finishBtn");
 
-  // selects / inputs
+  // inputs (agora podem ser hidden, mas o id é o mesmo)
   const volumeCiclo = document.getElementById("volumeCiclo");
   const nivelClimber = document.getElementById("nivelClimber");
   const observacoes = document.getElementById("observacoes");
@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   climbYes.addEventListener("click", () =>
     togglePair(climbYes, climbNo, (v) => (tentouEscalar = v), true)
   );
+
   climbNo.addEventListener("click", () =>
     togglePair(climbYes, climbNo, (v) => (tentouEscalar = v), false)
   );
@@ -69,9 +70,39 @@ document.addEventListener("DOMContentLoaded", () => {
   yellowYes.addEventListener("click", () =>
     togglePair(yellowYes, yellowNo, (v) => (cartaoAmarelo = v), true)
   );
+
   yellowNo.addEventListener("click", () =>
     togglePair(yellowYes, yellowNo, (v) => (cartaoAmarelo = v), false)
   );
+
+  // =========================================
+  // ✅ NOVO: botões que preenchem os inputs hidden
+  // - Mantém o ID volumeCiclo e nivelClimber
+  // - Seu banco não quebra
+  // =========================================
+  document.querySelectorAll(".toggle-btn[data-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      const value = btn.getAttribute("data-value");
+
+      const targetInput = document.getElementById(targetId);
+      if (!targetInput) return;
+
+      // remove active do grupo
+      document
+        .querySelectorAll(`.toggle-btn[data-target="${targetId}"]`)
+        .forEach((b) => b.classList.remove("active"));
+
+      // ativa o clicado
+      btn.classList.add("active");
+
+      // salva valor no input (id do banco)
+      targetInput.value = value;
+
+      // dispara evento (caso algum código escute mudança)
+      targetInput.dispatchEvent(new Event("change"));
+    });
+  });
 
   // finalizar
   finishBtn.addEventListener("click", async () => {

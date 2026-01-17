@@ -4,10 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Endgame — Federal Force Scout</title>
+
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./endgame.css">
 </head>
 <body>
+
   <main class="app">
     <header class="header">
       <div class="brand">
@@ -26,23 +28,19 @@
 
     <section class="main-grid">
       <form id="endForm" class="card form-card" autocomplete="off" novalidate>
-        <h2 class="card-title">Fase Endgame</h2>
+        <h2 class="card-title">Fase Endgame - 30Seg FINAIS</h2>
 
-        <!-- End Game: 30s finais -->
-        <div class="grid-1">
-          <label class="label">End Game: 30s finais</label>
-        </div>
-
-        <!-- Volume por ciclo -->
+        <!-- ✅ Volume por ciclo (agora é botão, mas mantém ID do banco) -->
         <div class="grid-1">
           <label class="label">Volume por ciclo:</label>
-          <div style="margin-top:8px;">
-            <select id="volumeCiclo" class="select-field">
-              <option value="">Selecione</option>
-              <option value="1-1">1-1</option>
-              <option value="pequenos-lotes">Pequenos lotes</option>
-              <option value="fluxo-continuo">Fluxo contínuo</option>
-            </select>
+
+          <!-- ID oficial do banco (agora hidden) -->
+          <input type="hidden" id="volumeCiclo" value="">
+
+          <div class="toggle-row" style="margin-top:10px;">
+            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="1-1">1-1</button>
+            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="pequenos-lotes">Pequenos lotes</button>
+            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="fluxo-continuo">Fluxo contínuo</button>
           </div>
         </div>
 
@@ -50,22 +48,30 @@
         <div class="grid-1">
           <label class="label">Climber:</label>
           <label class="label" style="margin-top:10px;">Robô tentou escalar?</label>
-          <div class="toggle-row">
+
+          <div class="toggle-row" style="margin-top:10px;">
             <button id="climbYes" type="button" class="toggle-btn">SIM</button>
-            <button id="climbNo"  type="button" class="toggle-btn">NÃO</button>
+            <button id="climbNo" type="button" class="toggle-btn">NÃO</button>
           </div>
         </div>
 
-        <!-- Nível -->
+        <!-- ✅ Nível atingido (agora é botão, mas mantém ID do banco) -->
         <div class="grid-1">
           <label class="label">Nível atingido:</label>
-          <div style="margin-top:8px;">
-            <select id="nivelClimber" class="select-field">
-              <option value="">Selecione</option>
-              <option value="1">Nível 1</option>
-              <option value="2">Nível 2</option>
-              <option value="3">Nível 3</option>
-            </select>
+
+          <div class="img-row" style="margin-top:10px;">
+            <img src="./climbernivel1.jpeg" class="climbernivelimg" alt="Nível 1">
+            <img src="./climbernivel2.jpeg" class="climbernivelimg" alt="Nível 2">
+            <img src="./climbernivel3.jpeg" class="climbernivelimg" alt="Nível 3">
+          </div>
+
+          <!-- ID oficial do banco (agora hidden) -->
+          <input type="hidden" id="nivelClimber" value="">
+
+          <div class="toggle-row" style="margin-top:10px;">
+            <button type="button" class="toggle-btn" data-target="nivelClimber" data-value="1">Nível 1</button>
+            <button type="button" class="toggle-btn" data-target="nivelClimber" data-value="2">Nível 2</button>
+            <button type="button" class="toggle-btn" data-target="nivelClimber" data-value="3">Nível 3</button>
           </div>
         </div>
 
@@ -73,9 +79,10 @@
         <div class="grid-1">
           <label class="label">Penalidades:</label>
           <label class="label" style="margin-top:10px;">Recebeu cartão amarelo?</label>
-          <div class="toggle-row">
+
+          <div class="toggle-row" style="margin-top:10px;">
             <button id="yellowYes" type="button" class="toggle-btn">SIM</button>
-            <button id="yellowNo"  type="button" class="toggle-btn">NÃO</button>
+            <button id="yellowNo" type="button" class="toggle-btn">NÃO</button>
           </div>
         </div>
 

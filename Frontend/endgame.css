@@ -1,146 +1,478 @@
+:root{
+  --bg1:#03061a;
+  --bg2:#071635;
+
+  --blue-1:#00a3ff;
+  --blue-2:#0088cc;
+  --silver:#e0e0e0;
+  --accent-text:#ffffff;
+
+  --panel-bg:rgba(255,255,255,0.02);
+  --border:rgba(255,255,255,0.06);
+  --muted:rgba(255,255,255,0.7);
+
+  --radius:16px;
+  --shadow: rgba(0, 100, 255, 0.10);
+}
+
+/* ============================================
+  RESET / BASE
+============================================ */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html, body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+  font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background:linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 80%);
+}
+
 body{
-  background: linear-gradient(180deg, #03061a 0%, #071635 85%) !important;
-  color: var(--accent-text);
-  margin: 0;
+  min-height:100vh;
+  color:var(--accent-text);
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
 
-/* ===== CONTAINER PRINCIPAL ===== */
+/* ============================================
+  APP LAYOUT
+============================================ */
+.app{
+  width:100%;
+  max-width:1180px;
+  margin:20px auto;
+  padding:18px;
+
+  display:flex;
+  flex-direction:column;
+}
+
+/* ============================================
+  HEADER (central + botões direita)
+============================================ */
+.header{
+  display:grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items:center;
+  width:100%;
+  padding:10px 0 18px;
+  margin-bottom:16px;
+}
+
+.brand{
+  grid-column:2;
+  justify-self:center;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.logo{
+  width:110px;
+  height:110px;
+  object-fit:contain;
+  border:none;
+  background:transparent;
+  padding:0;
+  border-radius:0;
+  flex-shrink:0;
+}
+
+.team{
+  font-size:22px;
+  font-weight:800;
+  background:linear-gradient(90deg, #4facfe, #00f2fe);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin:0;
+}
+
+.sub{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.meta-actions{
+  grid-column:3;
+  justify-self:end;
+  display:flex;
+  gap:12px;
+}
+
+/* ============================================
+  BOTÕES GERAIS
+============================================ */
+.btn{
+  padding:8px 14px;
+  border-radius:10px;
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--silver);
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s ease;
+  font-size:14px;
+}
+
+.btn:hover{
+  border-color:rgba(120,170,255,0.25);
+  background:rgba(255,255,255,0.04);
+  transform:translateY(-2px);
+}
+
+.btn.ghost{
+  background:transparent;
+}
+
+/* ============================================
+  CONTEÚDO PRINCIPAL
+============================================ */
 .main-grid{
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;   /* centraliza horizontal */
-  align-items: flex-start;   /* mantém no topo */
-  padding: 40px 16px;
+  width:100%;
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
 }
 
-/* ===== CARD DO FORMULÁRIO ===== */
+/* ============================================
+  CARD PRINCIPAL
+============================================ */
 .form-card{
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: left;
+  width:100%;
+  max-width:1180px;
+
+  background:var(--panel-bg);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  backdrop-filter: blur(10px);
+
+  padding:22px;
 }
 
-/* ===== TÍTULO ===== */
+/* ============================================
+  TÍTULO
+============================================ */
 .card-title{
-  color: var(--blue-2);
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 14px;
+  font-size:22px;
+  font-weight:900;
+  color:var(--blue-2);
+  margin-bottom:18px;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  text-align:center;
 }
 
-/* ===== BOTÕES SIM / NÃO ===== */
+/* ============================================
+  GRID DO FORM (2 colunas)
+============================================ */
+#endForm{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+  align-content:start;
+}
+
+/* Título ocupa tudo */
+#endForm > .card-title{
+  grid-column: 1 / -1;
+}
+
+/* Blocos */
+.grid-1{
+  background:rgba(255,255,255,0.015);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  padding:16px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:12px;
+}
+
+/* Observações ocupa tudo */
+.grid-1:has(textarea){
+  grid-column: 1 / -1;
+  align-items:stretch;
+  text-align:left;
+}
+
+/* ============================================
+  LABELS
+============================================ */
+.label{
+  display:block;
+  font-size:15px;
+  font-weight:800;
+  color:rgba(255,255,255,0.92);
+  line-height:1.25;
+  text-align:center;
+}
+
+/* Quando for label dentro do campo (observações) */
+.field .label{
+  text-align:left;
+}
+
+/* ============================================
+  SELECT
+============================================ */
+.select-field{
+  width:100%;
+  max-width:320px;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(120,170,255,0.20);
+
+  background:rgba(255,255,255,0.03);
+  color:var(--accent-text);
+  outline:none;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.select-field:focus{
+  border-color: rgba(0,163,255,0.6);
+  box-shadow: 0 0 14px rgba(0,163,255,0.25);
+}
+
+.select-field option{
+  background:#071635;
+  color:#ffffff;
+}
+
+/* ============================================
+  TOGGLE (SIM/NÃO)
+============================================ */
 .toggle-row{
-  display: flex;
-  gap: 12px;
-  margin-top: 10px;
+  width:100%;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px;
+  justify-content:center;
 }
 
 .toggle-btn{
-  flex: 1;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: var(--silver);
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  color:var(--silver);
+
+  cursor:pointer;
+  font-weight:800;
+  font-size:15px;
+  transition: all .2s ease;
+  text-align:center;
 }
 
 .toggle-btn:hover{
   transform: translateY(-2px);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(120,170,255,0.25);
+  box-shadow: 0 6px 15px var(--shadow);
 }
 
-/* ===== BOTÃO ATIVO ===== */
+/* Estado ativo (quando seu JS colocar .active) */
 .toggle-btn.active{
-  background: #61c9ff;
-  color: #fcf9f9;
-  border: 1px solid rgba(255,255,255,0.25);
-
-  /* brilho + sombra */
-  box-shadow:
-    0 0 18px rgba(97, 201, 255, 0.55),
-    0 6px 18px rgba(0, 0, 0, 0.35);
-
-  transform: translateY(-2px);
+  background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+  border-color: transparent;
+  color:#02101f;
+  box-shadow: 0 8px 20px rgba(0,131,255,0.30);
 }
 
-/* ===== TEXTAREA ===== */
+/* ============================================
+  IMAGENS DO CLIMBER (pequenas e alinhadas)
+============================================ */
+.climbernivelimg{
+  width:100%;
+  max-width:220px; /* ✅ pequena */
+  height:110px;    /* ✅ padrão */
+  object-fit:cover;
+  object-position:center;
+
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 10px 30px rgba(0,131,255,0.10);
+}
+
+/* Se você quiser as 3 imagens lado a lado:
+   isso automaticamente deixa bonito */
+.grid-1:has(.climbernivelimg){
+  gap:10px;
+}
+
+.grid-1:has(.climbernivelimg) .climbernivelimg{
+  margin:0 auto;
+}
+
+/* ============================================
+  TEXTAREA (OBSERVAÇÕES)
+============================================ */
 textarea{
-  width: 100%;
-  min-height: 92px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(120,170,255,0.18);
-  background: rgba(255,255,255,0.03);
-  color: var(--accent-text);
-  resize: vertical;
-  box-sizing: border-box;
+  width:100%;
+  min-height:120px;
+  resize:none;
+
+  padding:14px 14px;
+  border-radius:14px;
+
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(120,170,255,0.20);
+  color:var(--accent-text);
+
+  outline:none;
+  font-size:15px;
+  line-height:1.4;
 }
 
-/* ===== SELECT ===== */
-.select-field{
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(120,170,255,0.18);
-  background: rgba(255,255,255,0.02);
-  color: var(--accent-text);
-  font-weight: 600;
-  box-sizing: border-box;
+textarea::placeholder{
+  color:rgba(255,255,255,0.30);
 }
 
-/* ===== FOOTER ===== */
+textarea:focus{
+  border-color: rgba(0,163,255,0.6);
+  box-shadow: 0 0 14px rgba(0,163,255,0.25);
+}
+
+/* ============================================
+  FOOTER
+============================================ */
 .footer{
-  padding: 18px 0;
-  text-align: center;
-  color: var(--muted);
+  margin-top:18px;
+  padding:12px 0 calc(12px + env(safe-area-inset-bottom));
+  text-align:center;
+  color:rgba(255,255,255,0.5);
+  font-size:12px;
 }
 
-/* ===== TOAST ===== */
+/* ============================================
+  TOAST (reaproveita padrão)
+============================================ */
 .toast{
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 9999;
-  pointer-events: none;
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+  pointer-events:none;
+
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-width:320px;
 }
 
 .toast .item{
-  background: rgba(10,20,36,0.95);
-  color: var(--accent-text);
-  padding: 10px 12px;
-  border-radius: 8px;
-  margin-top: 8px;
-  pointer-events: auto;
+  background:rgba(10, 20, 36, 0.95);
+  color:#eaf6ff;
+
+  padding:14px 16px;
+  border-radius:12px;
+  border-left:4px solid var(--blue-1);
+
+  pointer-events:auto;
+  animation:slideIn 0.3s ease;
+
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  font-size:14px;
 }
 
-/* ===== RESPONSIVO ===== */
-@media (max-width: 980px){
-  .form-card{
-    padding: 16px;
+@keyframes slideIn{
+  from{ transform:translateX(100%); opacity:0; }
+  to{ transform:translateX(0); opacity:1; }
+}
+
+/* ============================================
+  RESPONSIVO
+============================================ */
+@media(max-width:980px){
+  .logo{
+    width:56px;
+    height:56px;
+  }
+
+  #endForm{
+    grid-template-columns:1fr; /* vira 1 coluna */
+  }
+
+  .grid-1:has(textarea){
+    grid-column:auto;
+  }
+
+  .climbernivelimg{
+    max-width:340px;
+    height:140px;
+  }
+}
+
+@media(max-width:768px){
+  .app{
+    padding:14px;
+  }
+
+  .header{
+    grid-template-columns:1fr;
+    gap:14px;
+    text-align:center;
+  }
+
+  .brand{
+    grid-column:1;
+    justify-self:center;
+    flex-direction:column;
+  }
+
+  .meta-actions{
+    grid-column:1;
+    justify-self:center;
+  }
+
+  .team{
+    font-size:18px;
   }
 
   .toggle-row{
-    flex-direction: row;
+    grid-template-columns:1fr;
+  }
+
+  .select-field{
+    max-width:100%;
+  }
+
+  .climbernivelimg{
+    height:130px;
   }
 }
 
-.select-field{
-  width:100%;
-  padding:12px 14px;
-  border-radius:10px;
-  border:1px solid rgba(120,170,255,0.18);
-  background: rgba(255,255,255,0.02);
-  color: #fff !important; /* texto branco */
-  font-weight:600;
-  box-sizing:border-box;
-  appearance: none; /* tira estilo padrão */
+@media(max-width:480px){
+  .climbernivelimg{
+    height:120px;
+  }
 }
 
-/* opções do select */
-.select-field option{
-  color: #fff;           /* texto branco */
-  background: #071635;   /* fundo escuro */
+/* ============================================
+  REDUZIR MOVIMENTO
+============================================ */
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
 }
