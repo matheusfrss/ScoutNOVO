@@ -144,3 +144,10 @@ textarea{
   color: #fff;           /* texto branco */
   background: #071635;   /* fundo escuro */
 }
+
+.climberimg {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  justify-content: center;
+}
