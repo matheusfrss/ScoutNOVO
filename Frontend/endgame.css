@@ -73,7 +73,7 @@ textarea{
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid rgba(120,170,255,0.18);
-  background: rgba(255,255,255,0.03);
+  background: rgb(255, 255, 255);
   color: var(--accent-text);
   resize: vertical;
   box-sizing: border-box;
@@ -85,7 +85,7 @@ textarea{
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid rgba(120,170,255,0.18);
-  background: rgba(255,255,255,0.02);
+  background: rgb(255, 255, 255);
   color: var(--accent-text);
   font-weight: 600;
   box-sizing: border-box;
@@ -150,4 +150,96 @@ textarea{
   height: auto;
   border-radius: 10px;
   justify-content: center;
+}
+
+/* ===============================
+   NÍVEL ATINGIDO (imagem + botões do lado)
+   =============================== */
+
+.climb-layout{
+  display: grid;
+  grid-template-columns: 260px 180px; /* largura da imagem | largura da coluna de botões */
+  gap: 16px;
+  align-items: start;
+}
+
+/* Área da imagem */
+.img-row{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* Imagem do climber */
+.climberimg{
+  width: 260px;          /* ajuste se quiser maior/menor */
+  height: auto;
+  border-radius: 14px;
+  display: block;
+}
+
+/* Coluna dos botões ao lado */
+.levels-side{
+  position: relative;
+  height: 260px;         /* igual (ou próximo) da altura da imagem */
+}
+
+/* Botões posicionados por altura (alinhados com a barra) */
+.level-btn{
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+.level-btn.n3{ top: 250px; }
+.level-btn.n2{ top: 155px; }
+.level-btn.n1{ top: 60px; }
+.level-btn.ns{ top: 550px; }
+
+/* Responsivo: no celular fica um embaixo do outro */
+@media (max-width: 520px){
+  .climb-layout{
+    grid-template-columns: 1fr;
+  }
+
+  .climberimg{
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .levels-side{
+    height: auto;
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .level-btn{
+    position: static;
+    width: 100%;
+  }
+}
+
+/* Imagem climberX fica abaixo do layout anterior */
+/* Coluna da imagem principal */
+.img-row{
+  display: flex;
+  flex-direction: column;   /* empilha as imagens */
+  align-items: flex-start;
+  gap: 10px;                /* espaço entre as imagens */
+}
+
+/* Imagem principal */
+.climberimg{
+  width: 260px;
+  border-radius: 14px;
+  display: block;
+}
+
+/* Imagem pequena abaixo */
+.climberimgX{
+  width: 262px;              /* pequena, mas visível */
+  height: auto;
+  border-radius: 10px;
+  display: block;
 }

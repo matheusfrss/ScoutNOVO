@@ -55,28 +55,46 @@
           </div>
         </div>
 
-          <div class="grid-1">
+        <!-- ✅ Nível atingido -->
+        <div class="grid-1">
           <label class="label">Nível atingido:</label>
 
-          <div class="img-row" style="margin-top:100px;">
-            <img src="./climberofc.jpeg" class="climberimg" alt="Nível 1">
-          </div>
-
-          <input type="hidden" id="nivelClimber" value="">
-
-          <div class="toggle-row" style="margin-top:10px;">
-            <button type="button" class="toggle-btn" data-target="nivelClimber1" data-value="1">Nível 1</button>
-            <button type="button" class="toggle-btn" data-target="nivelClimber2" data-value="2">Nível 2</button>
-            <button type="button" class="toggle-btn" data-target="nivelClimber3" data-value="3">Nível 3</button>
-            <button type="button" class="toggle-btn" data-target="nivelClimber4" data-value="4">Sem Sucesso</button>
+          <div class="climb-layout" style="margin-top:20px;">
             
+            <!-- Imagem -->
+            <div class="img-row">
+              <img src="./climberofc.jpeg" class="climberimg" alt="Nível atingido">
+
+              <img src="./climberX.jpeg" class="climberimgX" alt="Nível não tentou">
+
+            </div>
+
+            <div class="levels-side">
+  <button type="button" class="toggle-btn level-btn n1" data-target="nivelClimber" data-value="1">Nível 3</button>
+  <button type="button" class="toggle-btn level-btn n2" data-target="nivelClimber" data-value="2">Nível 2</button>
+  <button type="button" class="toggle-btn level-btn n3" data-target="nivelClimber" data-value="3">Nível 1</button>
+
+  <div class="sem-sucesso-wrap">
+    <button type="button" class="toggle-btn level-btn ns" data-target="nivelClimber" data-value="4">
+      Sem Sucesso
+    </button>
+
+  </div>
+</div>
+
+          
+
+
           </div>
+
+          <!-- ID oficial do banco -->
+          <input type="hidden" id="nivelClimber" value="">
         </div>
 
         <!-- Penalidades -->
         <div class="grid-1">
           <label class="label">Penalidades:</label>
-          <label class="label" style="margin-top:10px;">Recebeu cartão amarelo?</label>
+          <label class="label" style="margin-top:35px;">Recebeu cartão amarelo?</label>
 
           <div class="toggle-row" style="margin-top:10px;">
             <button id="yellowYes" type="button" class="toggle-btn">SIM</button>
