@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Endgame — Federal Force Scout</title>
+
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./endgame.css">
+</head>
+<body>
+
+  <main class="app">
+    <header class="header">
+      <div class="brand">
+        <img src="./logoscoutatt.png" alt="Federal Scout" class="logo">
+        <div>
+          <h1 class="team">FEDERAL FORCE</h1>
+          <p class="sub">Scout FASE — Endgame</p>
+        </div>
+      </div>
+
+      <div class="meta-actions">
+        <button id="backBtn" class="btn ghost" type="button" onclick="window.location.href='teleop.html'">Anterior</button>
+        <button id="finishBtn" class="btn ghost" type="button">Finalizar</button>
+      </div>
+    </header>
+
+    <section class="main-grid">
+      <form id="endForm" class="card form-card" autocomplete="off" novalidate>
+        <h2 class="card-title">Fase Endgame - 30Seg FINAIS</h2>
+
+        <!-- ✅ Volume por ciclo (agora é botão, mas mantém ID do banco) -->
+        <div class="grid-1">
+          <label class="label">Volume por ciclo:</label>
+
+          <!-- ID oficial do banco (agora hidden) -->
+          <input type="hidden" id="volumeCiclo" value="">
+
+          <div class="toggle-row" style="margin-top:10px;">
+            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="UmporUm">UmporUm</button>
+            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="Pequenos lotes">Pequenos lotes</button>
+            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="Fluxo contínuo">Fluxo contínuo</button>
+          </div>
+        </div>
+
+        <!-- Climber -->
+        <div class="grid-1">
+          <label class="label">Climber:</label>
+          <label class="label" style="margin-top:10px;">Robô tentou escalar?</label>
+
+          <div class="toggle-row" style="margin-top:10px;">
+            <button id="climbYes" type="button" class="toggle-btn">SIM</button>
+            <button id="climbNo" type="button" class="toggle-btn">NÃO</button>
+          </div>
+        </div>
+
+        <!-- ✅ Nível atingido -->
+        <div class="grid-1">
+          <label class="label">Nível atingido:</label>
+
+          <div class="climb-layout" style="margin-top:20px;">
+            
+            <!-- Imagem -->
+            <div class="img-row">
+              <img src="./climberofc.jpeg" class="climberimg" alt="Nível atingido">
+
+              <img src="./climberX.jpeg" class="climberimgX" alt="Nível não tentou">
+
+            </div>
+
+            <div class="levels-side">
+  <button type="button" class="toggle-btn level-btn n1" data-target="nivelClimber" data-value="1">Nível 3</button>
+  <button type="button" class="toggle-btn level-btn n2" data-target="nivelClimber" data-value="2">Nível 2</button>
+  <button type="button" class="toggle-btn level-btn n3" data-target="nivelClimber" data-value="3">Nível 1</button>
+
+  <div class="sem-sucesso-wrap">
+    <button type="button" class="toggle-btn level-btn ns" data-target="nivelClimber" data-value="4">
+      Sem Sucesso
+    </button>
+
+  </div>
+</div>
+
+          
+
+
+          </div>
+
+          <!-- ID oficial do banco -->
+          <input type="hidden" id="nivelClimber" value="">
+        </div>
+
+        <!-- Penalidades -->
+        <div class="grid-1">
+          <label class="label">Penalidades:</label>
+          <label class="label" style="margin-top:35px;">Recebeu cartão amarelo?</label>
+
+          <div class="toggle-row" style="margin-top:10px;">
+            <button id="yellowYes" type="button" class="toggle-btn">SIM</button>
+            <button id="yellowNo" type="button" class="toggle-btn">NÃO</button>
+          </div>
+        </div>
+
+        <!-- Observações -->
+        <div class="grid-1">
+          <label class="field">
+            <span class="label">Observações:</span>
+            <textarea id="observacoes" rows="4" placeholder="Escreva observações aqui..."></textarea>
+          </label>
+        </div>
+
+      </form>
+    </section>
+
+    <footer class="footer">
+      <small>Federal Force — Endgame</small>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script src="./draft-utils.js"></script>
+  <script src="./endgame.js"></script>
+</body>
+</html>

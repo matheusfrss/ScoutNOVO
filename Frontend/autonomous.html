@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Autônomo — Federal Force Scout</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="autonomous.css">
+</head>
+<body>
+
+<main class="app">
+  <header class="header">
+    <div class="brand">
+      <img src="./logoscoutatt.png" class="logo" alt="Federal Scout">
+      <div>
+        <h1 class="team">FEDERAL SCOUT</h1>
+        <p class="sub">Scout FASE — Autônomo</p>
+      </div>
+    </div>
+
+    <div class="meta-actions">
+      <button id="backBtn" class="btn ghost" type="button" onclick="window.location.href='index.html'">Anterior</button>
+      <button id="nextBtn" class="btn ghost" type="button" onclick="window.location.href='teleop.html'">Próximo</button>
+    </div>
+  </header>
+
+  <section class="main-grid">
+    <form id="autoForm" class="card form-card" autocomplete="off" novalidate>
+      <h2 class="card-title">Fase Autônomo</h2>
+
+      <!-- Linha de largada -->
+      <div class="grid-1">
+        <img src="./linhadelargada.jpeg" class="largadalinha" alt="Linha de largada">
+        <label class="label">Saiu da linha de largada?</label>
+
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="startLineYes" type="button" class="auto-btn">SIM</button>
+          <button id="startLineNo" type="button" class="auto-btn">NÃO</button>
+        </div>
+      </div>
+
+      <!-- Coleta na zona neutra -->
+      <div class="grid-1">
+        <label class="label">Buscou combustível na zona central?</label>
+        <img src="./zonaneutra.jpeg" class="neutrazona" alt="Zona Neutra">
+
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="fuelYes" type="button" class="auto-btn">SIM</button>
+          <button id="fuelNo" type="button" class="auto-btn">NÃO</button>
+        </div>
+      </div>
+
+      <!-- Pontuação no HUB -->
+      <div class="grid-1">
+        <label class="label">Pontuação no HUB:</label>
+        <img src="./hubinativo.jpeg" class="hubimg" alt="HUB">
+
+        <div class="auto-toggle" style="margin-top:10px; flex-wrap:wrap;">
+          <button id="hub0" type="button" class="auto-btn">0</button>
+          <button id="hub1_8" type="button" class="auto-btn">1–8</button>
+          <button id="hub9_16" type="button" class="auto-btn">9–16</button>
+          <button id="hub17" type="button" class="auto-btn">17+</button>
+        </div>
+      </div>
+
+      <!-- Climber -->
+      <div class="grid-1">
+        <label class="label">Concluiu a escalada?</label>
+        <img src="./climbernivel1.jpeg" class="climberimg" alt="Climber Nível 1">
+
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="climbLevel1" type="button" class="auto-btn">NÍVEL 1</button>
+          <button id="climbNo" type="button" class="auto-btn">NÃO CONCLUIU</button>
+        </div>
+      </div>
+
+      <!-- Falha técnica -->
+      <div class="grid-1">
+        <label class="label">Robô foi desativado?</label>
+
+        <div class="auto-toggle" style="margin-top:10px;">
+          <button id="disabledYes" type="button" class="auto-btn">SIM</button>
+          <button id="disabledNo" type="button" class="auto-btn">NÃO</button>
+        </div>
+      </div>
+
+    </form>
+  </section>
+
+  <footer class="footer">
+    <small>Federal Force — Autônomo</small>
+  </footer>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="./draft-utils.js"></script>
+<script src="./autonomous.js"></script>
+</body>
+</html>
