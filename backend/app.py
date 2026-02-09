@@ -95,14 +95,11 @@ def salvar_robo():
         print(f"📨 Supabase status: {response.status_code}")
         print(response.text)
 
-        if response.status_code in (200, 201):
-            res = response.json()
-            return jsonify({
-                "status": "ok",
-                "mensagem": "Scouting salvo com sucesso!",
-                "id": res[0]["id"] if res else None
-            })
-
+        return jsonify({
+    "status": "ok",
+    "mensagem": "Scouting salvo com sucesso!"
+    })
+    
         return jsonify({
             "status": "erro",
             "mensagem": "Falha ao salvar no Supabase",
