@@ -115,9 +115,6 @@ def salvar_robo():
         }), 500
 
 
-# ======================
-# RESET DA COMPETIÇÃO (ADMIN)
-# ======================
 @app.route("/api/reset_competicao", methods=["POST"])
 def reset_competicao():
     try:
