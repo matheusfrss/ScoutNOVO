@@ -147,8 +147,7 @@ def reset_competicao():
             "Authorization": f"Bearer {SUPABASE_KEY}"
         }
 
-        # ✅ apaga tudo que tiver id > 0
-        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?id=gt.0"
+        url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?num_partida=gt.0"
 
         response = requests.delete(url, headers=headers, timeout=10)
 
@@ -175,14 +174,11 @@ def reset_competicao():
         }), 500
 
 
-# ======================
-# TESTE
-# ======================
 @app.route("/teste")
 def teste():
     return jsonify({
         "status": "ok",
-        "mensagem": "API Flask funcionando ✅ VERSAO NOVA 2026-01-13"
+        "mensagem": "API Flask funcionando VERSAO NOVA 2026"
     })
 
 
