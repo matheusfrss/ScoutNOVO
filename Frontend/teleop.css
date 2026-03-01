@@ -4,6 +4,9 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
+/* ============================================
+   GRID PRINCIPAL
+============================================ */
 .main-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -14,146 +17,84 @@ body {
   margin: 0 auto;
 }
 
+/* ============================================
+   CARD PRINCIPAL
+============================================ */
 .form-card {
-  max-width: 700px;
+  max-width: 720px;
   width: 100%;
   margin: 0 auto;
-  padding: 32px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(120, 170, 255, 0.12);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25),
-              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  padding: 28px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(120, 170, 255, 0.15);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
   text-align: center;
 }
 
+/* ============================================
+   TÍTULO
+============================================ */
 .card-title {
   color: var(--blue-2);
-  font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 24px;
-  letter-spacing: -0.01em;
-  position: relative;
-  display: inline-block;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  letter-spacing: 0;
 }
 
-.card-title::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 3px;
-  background: var(--blue-2);
-  border-radius: 2px;
-  opacity: 0.4;
-}
-
+/* ============================================
+   FIELD
+============================================ */
 .field {
   text-align: left;
   margin-bottom: 22px;
 }
 
+/* ============================================
+   INPUT NUMBER PADRÃO
+============================================ */
 input[type="number"] {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 14px;
-  border: 1.5px solid rgba(120, 170, 255, 0.15);
+  border: 1.5px solid rgba(120, 170, 255, 0.2);
   padding: 16px 18px;
   color: var(--accent-text);
   width: 100%;
-  font-size: 15px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border 0.18s ease;
 }
 
 input[type="number"]:focus {
   outline: none;
-  border-color: rgba(120, 170, 255, 0.4);
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 3px rgba(120, 170, 255, 0.1);
+  border-color: rgba(120, 170, 255, 0.5);
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
-  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3);
 }
 
-.bubble-col {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
-  align-items: flex-start;
-}
-
-.bubble-btn{
-  width: 150px;
-  height: 130px;
-  border: none;             /* ✅ remove borda */
-  border-radius: 50%;
-  cursor: pointer;
-
-  background: url("./combustivelsemfundo.png") center/contain no-repeat;
-
-  box-shadow: none;         /* ✅ remove halo */
-  background-color: transparent;
-  overflow: hidden;
-
-  transition: transform 0.12s ease;
-}
-
-/* ✅ só um “pop” quando clicar */
-.bubble-btn:active{
-  transform: translateY(-8px) scale(1.02);
-}
-
-
-
-.bubble-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.bubble-col input {
-  width: 100px;
-  text-align: center;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 10px;
-  font-size: 16px;
-}
-
+/* ============================================
+   BLOCO DO CICLO (PLACAR)
+============================================ */
 .ciclo-box {
-  margin-top: 16px;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
 }
 
 .ciclo-value {
-  width: 140px;
-  padding: 16px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  width: 160px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(0, 140, 255, 0.08);
+  border: 1.5px solid rgba(0, 140, 255, 0.35);
   display: flex;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-}
-
-.ciclo-value::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05), transparent);
 }
 
 .ciclo-value input {
@@ -162,51 +103,72 @@ input::placeholder {
   border: none;
   outline: none;
   text-align: center;
-  font-weight: 800;
-  font-size: 32px;
-  color: #fff;
-  letter-spacing: -0.5px;
+  font-weight: 900;
+  font-size: 36px;
+  color: #ffffff;
+  letter-spacing: -1px;
 }
 
-.ciclo-row{
-  margin-top: 12px;
+/* ============================================
+   BOLA (BOTÃO PRINCIPAL)
+============================================ */
+.bubble-btn {
+  width: 160px;
+  height: 140px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: url("./combustivelsemfundo.png") center/contain no-repeat;
+  background-color: transparent;
+  transition: transform 0.1s ease;
+}
+
+.bubble-btn:active {
+  transform: scale(0.96);
+}
+
+.bubble-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ============================================
+   LINHA CICLO
+============================================ */
+.ciclo-row {
+  margin-top: 14px;
   display: flex;
   align-items: center;
   gap: 18px;
-
-  padding: 0;              /* ✅ tira o bloco */
-  background: transparent;  /* ✅ tira o fundo */
-  border: none;             /* ✅ tira borda */
 }
 
-
-.bubble-btn.small {
-  width: 44px;
-  height: 44px;
-  box-shadow: 0 4px 12px rgba(255, 212, 0, 0.25);
-}
-
+/* ============================================
+   INPUT CICLO MANUAL
+============================================ */
 .ciclo-input {
   width: 100px;
-  height: 44px;
+  height: 46px;
   border-radius: 14px;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
   color: #fff;
   text-align: center;
   font-weight: 700;
   font-size: 18px;
   outline: none;
-  transition: all 0.25s ease;
+  transition: border 0.18s ease;
 }
 
 .ciclo-input:focus {
-  border-color: rgba(120, 170, 255, 0.4);
-  box-shadow: 0 0 0 3px rgba(120, 170, 255, 0.1);
+  border-color: rgba(120, 170, 255, 0.5);
 }
 
+/* ============================================
+   SEGMENTED BUTTONS
+============================================ */
 .segmented {
-  margin-top: 16px;
+  margin-top: 18px;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -218,93 +180,95 @@ input::placeholder {
 }
 
 .seg-btn {
-  padding: 16px 20px;
-  border-radius: 16px;
+  padding: 15px 18px;
+  border-radius: 14px;
   cursor: pointer;
   font-weight: 600;
   font-size: 15px;
   color: rgba(255, 255, 255, 0.9);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.15s ease,
+              border 0.15s ease,
+              color 0.15s ease,
+              transform 0.08s ease;
   flex: 1;
   min-width: 120px;
-  position: relative;
-  overflow: hidden;
 }
 
-.seg-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.seg-btn:hover::before {
-  left: 100%;
-}
-
+/* Hover leve */
 .seg-btn:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.05));
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-color: rgba(120, 170, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* ✅ QUANDO APERTAR (CLICAR SEGURANDO) - IGUAL O PRINT */
+/* Clique físico (sem mudar cor!) */
 .seg-btn:active {
-  background: linear-gradient(180deg, #88DBFF 0%, #63C7FF 100%);
-  border-color: rgba(0, 140, 255, 0.9);
-  color: #000;
-  transform: translateY(1px);
-  box-shadow: 0 6px 14px rgba(99, 199, 255, 0.35);
+  transform: scale(0.97);
 }
 
+/* Estado selecionado */
 .seg-btn.active {
-  background: linear-gradient(180deg, #88DBFF 0%, #63C7FF 100%);
-  border-color: rgba(0, 140, 255, 0.9);
-  color: #000;
-  box-shadow: 0 10px 22px rgba(99, 199, 255, 0.35);
+  background: var(--blue-1);
+  border-color: var(--blue-1);
+  color: #001020;
 }
 
-/* Animações sutis */
+/* ============================================
+   ANIMAÇÃO SUAVE (MENOS MARKETING)
+============================================ */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .form-card > * {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.25s ease-out forwards;
 }
 
-/* Responsividade */
+/* ============================================
+   RESPONSIVIDADE
+============================================ */
 @media (max-width: 768px) {
+
   .form-card {
     padding: 24px 20px;
     border-radius: 20px;
   }
-  
+
   .seg-btn {
-    min-width: calc(50% - 8px);
+    padding: 18px;
+    font-size: 16px;
+    min-width: calc(50% - 6px);
+  }
+
+  .ciclo-value input {
+    font-size: 40px;
+  }
+
+  .bubble-btn {
+    width: 170px;
+    height: 150px;
   }
 }
 
 @media (max-width: 480px) {
+
   .main-grid {
     padding: 16px 12px;
     gap: 20px;
   }
-  
+
   .seg-btn {
     min-width: 100%;
   }
-  
+
   .ciclo-row {
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
+  }
+
+  .ciclo-value input {
+    font-size: 42px;
   }
 }
