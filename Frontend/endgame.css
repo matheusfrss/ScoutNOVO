@@ -178,6 +178,34 @@ textarea{
   display: block;
 }
 
+
+
+/* ============================================
+   BOLA (BOTÃO PRINCIPAL)
+============================================ */
+.bubble-btn {
+  width: 160px;
+  height: 140px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: url("./combustivelsemfundo.png") center/contain no-repeat;
+  background-color: transparent;
+  transition: transform 0.1s ease;
+}
+
+.bubble-btn:active {
+  transform: scale(0.96);
+}
+
+.bubble-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+
+
 /* Coluna dos botões ao lado */
 .levels-side{
   position: relative;
@@ -191,6 +219,7 @@ textarea{
   width: 100%;
 }
 
+.level-btn.n4{ top: 350px; }
 .level-btn.n3{ top: 250px; }
 .level-btn.n2{ top: 155px; }
 .level-btn.n1{ top: 60px; }

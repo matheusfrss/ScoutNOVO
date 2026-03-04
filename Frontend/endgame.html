@@ -14,6 +14,9 @@
     <header class="header">
       <div class="brand">
         <img src="./logoscoutatt.png" alt="Federal Scout" class="logo">
+       
+
+        
         <div>
           <h1 class="team">FEDERAL SCOUT</h1>
           <p class="sub">Scout FASE — Endgame</p>
@@ -30,19 +33,23 @@
       <form id="endForm" class="card form-card" autocomplete="off" novalidate>
         <h2 class="card-title">Fase Endgame - 30Seg FINAIS</h2>
 
-        <!-- ✅ Volume por ciclo (agora é botão, mas mantém ID do banco) -->
+        <!--  Volume por ciclo (agora é botão, mas mantém ID do banco) -->
         <div class="grid-1">
           <label class="label">Volume por ciclo:</label>
 
-          <!-- ID oficial do banco (agora hidden) -->
-          <input type="hidden" id="volumeCiclo" value="">
+          <!-- Ciclo de pontuação (bolinha +1) -->
+<div class="grid-1">
+  <div class="field">
+    <span class="label">Ciclo de pontuação (toda vez que o robô descarregar no HUB)</span>
 
-          <div class="toggle-row" style="margin-top:10px;">
-            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="UmporUm">UmporUm</button>
-            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="Pequenos lotes">Pequenos lotes</button>
-            <button type="button" class="toggle-btn" data-target="volumeCiclo" data-value="Fluxo contínuo">Fluxo contínuo</button>
-          </div>
-        </div>
+    <div class="ciclo-row">
+
+      <button id="maisCiclo" class="bubble-btn" type="button" aria-label="Adicionar +1"></button>
+
+      <input id="cicloPontuacao" class="ciclo-input" type="number" min="0" step="1" value="0" readonly>
+    </div>
+  </div>
+</div>
 
         <!-- Climber -->
         <div class="grid-1">
@@ -55,7 +62,7 @@
           </div>
         </div>
 
-        <!-- ✅ Nível atingido -->
+        <!-- Nível atingido -->
         <div class="grid-1">
           <label class="label">Nível atingido:</label>
 
@@ -64,25 +71,14 @@
             <!-- Imagem -->
             <div class="img-row">
               <img src="./climberofc.jpeg" class="climberimg" alt="Nível atingido">
-
-              <img src="./climberX.jpeg" class="climberimgX" alt="Nível não tentou">
-
             </div>
 
-            <div class="levels-side">
-  <button type="button" class="toggle-btn level-btn n1" data-target="nivelClimber" data-value="1">Nível 3</button>
-  <button type="button" class="toggle-btn level-btn n2" data-target="nivelClimber" data-value="2">Nível 2</button>
-  <button type="button" class="toggle-btn level-btn n3" data-target="nivelClimber" data-value="3">Nível 1</button>
-
-  <div class="sem-sucesso-wrap">
-    <button type="button" class="toggle-btn level-btn ns" data-target="nivelClimber" data-value="4">
-      Sem Sucesso
-    </button>
-
-  </div>
-</div>
-
-          
+  
+          <div class="levels-side">
+   <button type="button" class="toggle-btn level-btn n4" data-target="nivelClimber" data-value="3">Sem Sucesso</button>
+   <button type="button" class="toggle-btn level-btn n1" data-target="nivelClimber" data-value="1">Nível 3</button>
+   <button type="button" class="toggle-btn level-btn n2" data-target="nivelClimber" data-value="2">Nível 2</button>
+   <button type="button" class="toggle-btn level-btn n3" data-target="nivelClimber" data-value="3">Nível 1</button>
 
 
           </div>
@@ -101,8 +97,10 @@
             <button id="yellowNo" type="button" class="toggle-btn">NÃO</button>
           </div>
         </div>
-
+        
         <!-- Observações -->
+
+
         <div class="grid-1">
           <label class="field">
             <span class="label">Observações:</span>

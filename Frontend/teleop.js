@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const maisCiclo = document.getElementById("maisCiclo");
 
   // hidden inputs dos segmented
-  const localLancamento = document.getElementById("localLancamento");
   const volumePorCiclo = document.getElementById("volumePorCiclo");
   const hubInativo = document.getElementById("hubInativo");
 
@@ -78,10 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // validações mínimas (pra não salvar vazio sem querer)
-      if (!localLancamento?.value) {
-        alert("Selecione o Local de lançamento.");
-        return;
-      }
+      
       if (!volumePorCiclo?.value) {
         alert("Selecione o Volume por ciclo.");
         return;
@@ -93,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       saveSection("teleop", {
         cicloPontuacao: Number(cicloPontuacao?.value || 0),
-        localLancamento: localLancamento.value,
         volumePorCiclo: volumePorCiclo.value,
         hubInativo: hubInativo.value,
       });

@@ -27,16 +27,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const yellowNo = document.getElementById("yellowNo");
 
   // valida DOM
-  const required = [
-    finishBtn,
-    volumeCiclo,
-    nivelClimber,
-    observacoes,
-    climbYes,
-    climbNo,
-    yellowYes,
-    yellowNo,
-  ];
+const required = [
+  finishBtn,
+  nivelClimber,
+  observacoes,
+  climbYes,
+  climbNo,
+  yellowYes,
+  yellowNo,
+];
+
+   // -------------------------
+  // CICLO PONTUAÇÃO (+)
+  // -------------------------
+  if (cicloPontuacao && maisCiclo) {
+    maisCiclo.addEventListener("click", () => {
+      cicloPontuacao.value = Number(cicloPontuacao.value || 0) + 1;
+    });
+  }
+
 
   if (required.some((el) => !el)) {
     console.error("[endgame] Alguns elementos não foram encontrados no DOM.");
@@ -113,10 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // validações
-    if (!volumeCiclo.value) {
-      alert("Selecione o Volume por ciclo.");
-      return;
-    }
+    
 
     if (tentouEscalar === null) {
       alert("Informe se o robô tentou escalar.");
@@ -128,6 +134,24 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Selecione o nível atingido no Climber.");
       return;
     }
+
+const fuelTitle = document.getElementById("fuelTitle");
+const closeModal = document.getElementById("closeModal");
+
+fuelAzul.addEventListener("click", () => {
+  fuelTitle.innerText = "Fuel Azul";
+  modal.style.display = "flex";
+});
+
+fuelVermelho.addEventListener("click", () => {
+  fuelTitle.innerText = "Fuel Vermelho";
+  modal.style.display = "flex";
+});
+
+closeModal.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
 
     if (cartaoAmarelo === null) {
       alert("Informe se recebeu cartão amarelo.");
@@ -142,6 +166,25 @@ document.addEventListener("DOMContentLoaded", () => {
       cartaoAmarelo,
       observacoes: observacoes.value.trim(),
     });
+
+   const fuelAzul = document.getElementById("fuelAzul");
+const fuelVermelho = document.getElementById("fuelVermelho");
+
+document.getElementById("maisFuelAzul").onclick = () => {
+  fuelAzul.value = Number(fuelAzul.value) + 1;
+};
+
+document.getElementById("menosFuelAzul").onclick = () => {
+  fuelAzul.value = Math.max(0, Number(fuelAzul.value) - 1);
+};
+
+document.getElementById("maisFuelVermelho").onclick = () => {
+  fuelVermelho.value = Number(fuelVermelho.value) + 1;
+};
+
+document.getElementById("menosFuelVermelho").onclick = () => {
+  fuelVermelho.value = Math.max(0, Number(fuelVermelho.value) - 1);
+};
 
     const finalDraft = readDraft();
     console.log("📤 Enviando draft COMPLETO:", finalDraft);
@@ -173,3 +216,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+const fuelAzul = document.getElementById("fuelAzul");
+const fuelVermelho = document.getElementById("fuelVermelho");
+
+document.getElementById("fuelAzulBtn").onclick = () => {
+  fuelAzul.value = Number(fuelAzul.value) + 1;
+};
+
+document.getElementById("fuelVermelhoBtn").onclick = () => {
+  fuelVermelho.value = Number(fuelVermelho.value) + 1;
+};
