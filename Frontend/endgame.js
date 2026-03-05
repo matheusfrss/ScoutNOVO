@@ -1,7 +1,7 @@
 // endgame.js
 // Compatível com draft-utils.js
 
-const API_URL = "https://scoutnovo.onrender.com";
+const API_URL = "https://scout-novo-jprdvz162-matheus-projects-efa1ac26.vercel.app";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -14,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // =========================
   // ELEMENTOS
-  // =========================
 
   const finishBtn = document.getElementById("finishBtn");
 
