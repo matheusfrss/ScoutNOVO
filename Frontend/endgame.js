@@ -1,8 +1,10 @@
-// endgame.js (COMPATÍVEL COM SEU endgame.html)
+// endgame.js
+// Compatível com draft-utils.js
 
 const API_URL = "https://scoutnovo.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
+
   if (
     typeof readDraft !== "function" ||
     typeof saveSection !== "function" ||
@@ -12,52 +14,67 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // =========================
+  // ELEMENTOS
+  // =========================
+
   const finishBtn = document.getElementById("finishBtn");
 
-  // inputs (agora podem ser hidden, mas o id é o mesmo)
   const volumeCiclo = document.getElementById("volumeCiclo");
   const nivelClimber = document.getElementById("nivelClimber");
   const observacoes = document.getElementById("observacoes");
 
-  // toggles
   const climbYes = document.getElementById("climbYes");
   const climbNo = document.getElementById("climbNo");
 
   const yellowYes = document.getElementById("yellowYes");
   const yellowNo = document.getElementById("yellowNo");
 
-  // valida DOM
-const required = [
-  finishBtn,
-  nivelClimber,
-  observacoes,
-  climbYes,
-  climbNo,
-  yellowYes,
-  yellowNo,
-];
+  const fuelAzul = document.getElementById("fuelAzul");
+  const fuelVermelho = document.getElementById("fuelVermelho");
 
-   // -------------------------
-  // CICLO PONTUAÇÃO (+)
-  // -------------------------
-  if (cicloPontuacao && maisCiclo) {
-    maisCiclo.addEventListener("click", () => {
-      cicloPontuacao.value = Number(cicloPontuacao.value || 0) + 1;
-    });
-  }
+  const maisFuelAzul = document.getElementById("maisFuelAzul");
+  const menosFuelAzul = document.getElementById("menosFuelAzul");
 
+  const maisFuelVermelho = document.getElementById("maisFuelVermelho");
+  const menosFuelVermelho = document.getElementById("menosFuelVermelho");
 
-  if (required.some((el) => !el)) {
-    console.error("[endgame] Alguns elementos não foram encontrados no DOM.");
+  const modal = document.getElementById("modal");
+  const fuelTitle = document.getElementById("fuelTitle");
+  const closeModal = document.getElementById("closeModal");
+
+  // =========================
+  // VALIDAÇÃO DOM
+  // =========================
+
+  const required = [
+    finishBtn,
+    nivelClimber,
+    observacoes,
+    climbYes,
+    climbNo,
+    yellowYes,
+    yellowNo
+  ];
+
+  if (required.some(el => !el)) {
+    console.error("[endgame] Elementos não encontrados no DOM.");
     return;
   }
 
-  // estados
-  let tentouEscalar = null; // boolean
-  let cartaoAmarelo = null; // boolean
+  // =========================
+  // ESTADOS
+  // =========================
 
-  // helper visual pra toggle sim/não
+  let tentouEscalar = null;
+  let cartaoAmarelo = null;
+
+  // =========================
+  // FUNÇÃO TOGGLE
+  // =========================
+
   function togglePair(yesBtn, noBtn, setter, value) {
+
     yesBtn.classList.remove("active");
     noBtn.classList.remove("active");
 
@@ -67,163 +84,208 @@ const required = [
     setter(value);
   }
 
-  // eventos toggle
+  // =========================
+  // EVENTOS TOGGLE
+  // =========================
+
   climbYes.addEventListener("click", () =>
-    togglePair(climbYes, climbNo, (v) => (tentouEscalar = v), true)
+    togglePair(climbYes, climbNo, v => tentouEscalar = v, true)
   );
 
   climbNo.addEventListener("click", () =>
-    togglePair(climbYes, climbNo, (v) => (tentouEscalar = v), false)
+    togglePair(climbYes, climbNo, v => tentouEscalar = v, false)
   );
 
   yellowYes.addEventListener("click", () =>
-    togglePair(yellowYes, yellowNo, (v) => (cartaoAmarelo = v), true)
+    togglePair(yellowYes, yellowNo, v => cartaoAmarelo = v, true)
   );
 
   yellowNo.addEventListener("click", () =>
-    togglePair(yellowYes, yellowNo, (v) => (cartaoAmarelo = v), false)
+    togglePair(yellowYes, yellowNo, v => cartaoAmarelo = v, false)
   );
 
-  // =========================================
-  // ✅ NOVO: botões que preenchem os inputs hidden
-  // - Mantém o ID volumeCiclo e nivelClimber
-  // - Seu banco não quebra
-  // =========================================
-  document.querySelectorAll(".toggle-btn[data-target]").forEach((btn) => {
+  // =========================
+  // BOTÕES TOGGLE DE INPUT
+  // =========================
+
+  document.querySelectorAll(".toggle-btn[data-target]").forEach(btn => {
+
     btn.addEventListener("click", () => {
+
       const targetId = btn.getAttribute("data-target");
       const value = btn.getAttribute("data-value");
 
       const targetInput = document.getElementById(targetId);
+
       if (!targetInput) return;
 
-      // remove active do grupo
       document
         .querySelectorAll(`.toggle-btn[data-target="${targetId}"]`)
-        .forEach((b) => b.classList.remove("active"));
+        .forEach(b => b.classList.remove("active"));
 
-      // ativa o clicado
       btn.classList.add("active");
 
-      // salva valor no input (id do banco)
       targetInput.value = value;
 
-      // dispara evento (caso algum código escute mudança)
       targetInput.dispatchEvent(new Event("change"));
     });
+
   });
 
-  // finalizar
+  // =========================
+  // CONTROLE DE FUEL
+  // =========================
+
+  if (maisFuelAzul)
+    maisFuelAzul.onclick = () => {
+      fuelAzul.value = Number(fuelAzul.value || 0) + 1;
+    };
+
+  if (menosFuelAzul)
+    menosFuelAzul.onclick = () => {
+      fuelAzul.value = Math.max(0, Number(fuelAzul.value || 0) - 1);
+    };
+
+  if (maisFuelVermelho)
+    maisFuelVermelho.onclick = () => {
+      fuelVermelho.value = Number(fuelVermelho.value || 0) + 1;
+    };
+
+  if (menosFuelVermelho)
+    menosFuelVermelho.onclick = () => {
+      fuelVermelho.value = Math.max(0, Number(fuelVermelho.value || 0) - 1);
+    };
+
+  // =========================
+  // MODAL FUEL
+  // =========================
+
+  if (fuelAzul) {
+    fuelAzul.addEventListener("click", () => {
+      fuelTitle.innerText = "Fuel Azul";
+      modal.style.display = "flex";
+    });
+  }
+
+  if (fuelVermelho) {
+    fuelVermelho.addEventListener("click", () => {
+      fuelTitle.innerText = "Fuel Vermelho";
+      modal.style.display = "flex";
+    });
+  }
+
+  if (closeModal) {
+    closeModal.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+  }
+
+  // =========================
+  // FINALIZAR SCOUT
+  // =========================
+
   finishBtn.addEventListener("click", async () => {
+
     const draft = readDraft();
+
     if (!draft) {
-      alert("Nenhum registro ativo. Volte ao início.");
+      alert("Nenhum registro ativo.");
       return;
     }
-
-    // validações
-    
 
     if (tentouEscalar === null) {
-      alert("Informe se o robô tentou escalar.");
+      alert("Informe se tentou escalar.");
       return;
     }
 
-    // se tentou escalar, precisa escolher nível
     if (tentouEscalar === true && !nivelClimber.value) {
-      alert("Selecione o nível atingido no Climber.");
+      alert("Selecione o nível do climber.");
       return;
     }
-
-const fuelTitle = document.getElementById("fuelTitle");
-const closeModal = document.getElementById("closeModal");
-
-fuelAzul.addEventListener("click", () => {
-  fuelTitle.innerText = "Fuel Azul";
-  modal.style.display = "flex";
-});
-
-fuelVermelho.addEventListener("click", () => {
-  fuelTitle.innerText = "Fuel Vermelho";
-  modal.style.display = "flex";
-});
-
-closeModal.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
 
     if (cartaoAmarelo === null) {
       alert("Informe se recebeu cartão amarelo.");
       return;
     }
 
-    // salva endgame
+    // =========================
+    // SALVAR ENDGAME NO DRAFT
+    // =========================
+
     saveSection("endgame", {
-      volumeCiclo: volumeCiclo.value,
-      tentouEscalar,
-      nivelClimber: tentouEscalar ? nivelClimber.value : null,
-      cartaoAmarelo,
-      observacoes: observacoes.value.trim(),
+
+      volumeCiclo: volumeCiclo ? volumeCiclo.value : null,
+
+      tentouEscalar: tentouEscalar,
+
+      nivelClimber: tentouEscalar
+        ? nivelClimber.value
+        : null,
+
+      cartaoAmarelo: cartaoAmarelo,
+
+      fuelAzul: fuelAzul
+        ? Number(fuelAzul.value || 0)
+        : 0,
+
+      fuelVermelho: fuelVermelho
+        ? Number(fuelVermelho.value || 0)
+        : 0,
+
+      observacoes: observacoes.value.trim()
+
     });
 
-   const fuelAzul = document.getElementById("fuelAzul");
-const fuelVermelho = document.getElementById("fuelVermelho");
-
-document.getElementById("maisFuelAzul").onclick = () => {
-  fuelAzul.value = Number(fuelAzul.value) + 1;
-};
-
-document.getElementById("menosFuelAzul").onclick = () => {
-  fuelAzul.value = Math.max(0, Number(fuelAzul.value) - 1);
-};
-
-document.getElementById("maisFuelVermelho").onclick = () => {
-  fuelVermelho.value = Number(fuelVermelho.value) + 1;
-};
-
-document.getElementById("menosFuelVermelho").onclick = () => {
-  fuelVermelho.value = Math.max(0, Number(fuelVermelho.value) - 1);
-};
-
     const finalDraft = readDraft();
-    console.log("📤 Enviando draft COMPLETO:", finalDraft);
+
+    console.log("📤 Enviando draft completo:", finalDraft);
+
+    // =========================
+    // ENVIO PARA API
+    // =========================
 
     try {
+
       const response = await fetch(`${API_URL}/api/salvar_robo`, {
+
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(finalDraft),
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(finalDraft)
+
       });
 
       if (!response.ok) {
+
         const errorText = await response.text();
+
         throw new Error(`Erro ${response.status}: ${errorText}`);
+
       }
 
       const result = await response.json();
+
       alert("✅ " + (result.mensagem || "Dados enviados com sucesso!"));
 
       clearDraft();
+
       window.location.href = "index.html";
+
     } catch (error) {
-      console.error("💥 Erro ao enviar:", error);
+
+      console.error("Erro ao enviar:", error);
+
       alert(
-        "Erro ao enviar os dados.\n" +
-          "Os dados NÃO foram perdidos.\n\n" +
-          error.message
+        "Erro ao enviar dados.\n\n" +
+        "Os dados NÃO foram perdidos.\n\n" +
+        error.message
       );
+
     }
+
   });
+
 });
-
-const fuelAzul = document.getElementById("fuelAzul");
-const fuelVermelho = document.getElementById("fuelVermelho");
-
-document.getElementById("fuelAzulBtn").onclick = () => {
-  fuelAzul.value = Number(fuelAzul.value) + 1;
-};
-
-document.getElementById("fuelVermelhoBtn").onclick = () => {
-  fuelVermelho.value = Number(fuelVermelho.value) + 1;
-};
