@@ -8,7 +8,7 @@ import traceback
 
 load_dotenv()
 
-app = Flask(**name**)
+app = Flask(__name__)
 
 # ======================
 
