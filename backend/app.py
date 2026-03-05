@@ -9,7 +9,19 @@ import traceback
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# ======================
+# CORS DEFINITIVO
+# ======================
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+@app.after_request
+def add_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+    return response
+
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -27,8 +39,9 @@ print(f"SUPABASE_KEY: {'OK' if SUPABASE_KEY else 'ERRO'}")
 print(f"ADMIN_PASSWORD: {'OK' if ADMIN_PASSWORD else 'ERRO'}")
 print("=" * 50)
 
+
 # ======================
-# ROTA PRINCIPAL
+# SALVAR ROBO
 # ======================
 @app.route("/api/salvar_robo", methods=["POST", "OPTIONS"])
 def salvar_robo():
@@ -41,15 +54,16 @@ def salvar_robo():
         print(json.dumps(dados, indent=2, ensure_ascii=False))
 
         if not dados:
-            return jsonify({"status": "erro", "mensagem": "JSON vazio"}), 400
+            return jsonify({
+                "status": "erro",
+                "mensagem": "JSON vazio"
+            }), 400
 
-        # ===== SEÇÕES =====
         basic = dados.get("basic", {})
         auto = dados.get("auto", {})
         teleop = dados.get("teleop", {})
         endgame = dados.get("endgame", {})
 
-        # ===== VALIDAÇÃO =====
         if not basic.get("matchNumber") or not basic.get("teamNumber"):
             return jsonify({
                 "status": "erro",
@@ -59,25 +73,21 @@ def salvar_robo():
         if not SUPABASE_URL or not SUPABASE_KEY:
             return jsonify({
                 "status": "erro",
-                "mensagem": "Supabase não configurado (env faltando)"
+                "mensagem": "Supabase não configurado"
             }), 500
 
-        # ✅ PAYLOAD: salva exatamente como veio do Front
         payload = {
-            # --- Básico ---
             "num_partida": basic.get("matchNumber"),
             "num_equipe": basic.get("teamNumber"),
             "nome_scout": basic.get("scouter", ""),
             "tipo_partida": basic.get("matchType", ""),
             "alianca": basic.get("alliance", ""),
-            "posicao_inicial": basic.get("startingPosition", ""),
+            "posicao_inicial": basic.get("startingPosition"),
 
-            # --- JSONB RAW (sem renomear chaves) ---
             "autonomo": auto,
             "teleop": teleop,
             "endgame": endgame,
 
-            # --- Backup completo ---
             "dados_json": dados
         }
 
@@ -90,54 +100,59 @@ def salvar_robo():
 
         url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
 
-        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=payload,
+            timeout=10
+        )
 
-        print(f"📨 Supabase status: {response.status_code}")
+        print("📨 Supabase status:", response.status_code)
         print(response.text)
 
-        return jsonify({
-    "status": "ok",
-    "mensagem": "Scouting salvo com sucesso!"
-    })
-    
+        if response.status_code in (200, 201):
+            return jsonify({
+                "status": "ok",
+                "mensagem": "Scouting salvo com sucesso!"
+            })
+
         return jsonify({
             "status": "erro",
             "mensagem": "Falha ao salvar no Supabase",
-            "resposta": response.text
+            "detalhes": response.text
         }), 500
 
     except Exception:
         print("💥 ERRO:")
         print(traceback.format_exc())
+
         return jsonify({
             "status": "erro",
-            "mensagem": "Erro interno"
+            "mensagem": "Erro interno no servidor"
         }), 500
 
 
+# ======================
+# RESET COMPETIÇÃO
+# ======================
 @app.route("/api/reset_competicao", methods=["POST"])
 def reset_competicao():
     try:
+
         data = request.get_json(silent=True) or {}
         senha = data.get("senha")
 
         if not ADMIN_PASSWORD:
             return jsonify({
                 "status": "erro",
-                "mensagem": "ADMIN_PASSWORD não configurado no servidor"
+                "mensagem": "ADMIN_PASSWORD não configurado"
             }), 500
 
         if senha != ADMIN_PASSWORD:
             return jsonify({
                 "status": "erro",
-                "mensagem": "Senha de administrador incorreta"
+                "mensagem": "Senha incorreta"
             }), 403
-
-        if not SUPABASE_URL or not SUPABASE_KEY:
-            return jsonify({
-                "status": "erro",
-                "mensagem": "Supabase não configurado (env faltando)"
-            }), 500
 
         headers = {
             "apikey": SUPABASE_KEY,
@@ -148,29 +163,32 @@ def reset_competicao():
 
         response = requests.delete(url, headers=headers, timeout=10)
 
-        print(f"🧹 Reset Supabase status: {response.status_code}")
-        print(response.text)
+        print("🧹 Reset status:", response.status_code)
 
         if response.status_code in (200, 204):
             return jsonify({
                 "status": "ok",
-                "mensagem": "Competição resetada com sucesso"
+                "mensagem": "Competição resetada"
             })
 
         return jsonify({
             "status": "erro",
-            "mensagem": "Falha ao resetar competição",
+            "mensagem": "Falha ao resetar",
             "detalhes": response.text
         }), 500
 
     except Exception:
         print(traceback.format_exc())
+
         return jsonify({
             "status": "erro",
             "mensagem": "Erro interno"
         }), 500
 
 
+# ======================
+# TESTE API
+# ======================
 @app.route("/teste")
 def teste():
     return jsonify({
@@ -179,7 +197,9 @@ def teste():
     })
 
 
-
+# ======================
+# HOME
+# ======================
 @app.route("/")
 def home():
     return jsonify({
@@ -188,6 +208,9 @@ def home():
     })
 
 
+# ======================
+# RUN LOCAL
+# ======================
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
