@@ -1,7 +1,7 @@
 // endgame.js
 // Compatível com draft-utils.js
 
-const API_URL = "https://scout-novo-jprdvz162-matheus-projects-efa1ac26.vercel.app";
+const API_URL = "https://scoutnovo.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
 
