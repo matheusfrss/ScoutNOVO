@@ -30,7 +30,7 @@ print("=" * 50)
 # ======================
 # ROTA PRINCIPAL
 # ======================
-@app.route("/api/salvar_robo", methods=["POST"])
+@app.route("/api/salvar_robo", methods=["POST", "OPTIONS"])
 def salvar_robo():
     try:
         print("🔵 /api/salvar_robo chamado")
