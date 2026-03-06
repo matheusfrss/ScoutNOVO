@@ -14,6 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+const botaoMais = document.getElementById("maisCiclo");
+const inputCiclo = document.getElementById("cicloPontuacao");
+
+botaoMais.addEventListener("click", () => {
+  let valor = parseInt(inputCiclo.value) || 0;
+  inputCiclo.value = valor + 1;
+});
+
+
   // ELEMENTOS
 
   const finishBtn = document.getElementById("finishBtn");
