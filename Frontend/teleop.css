@@ -210,8 +210,8 @@ input::placeholder {
 
 /* Estado selecionado */
 .seg-btn.active {
-  background: var(--blue-1);
-  border-color: var(--blue-1);
+  background: #61c9ff;
+  border-color: #61c9ff;
   color: #001020;
 }
 
@@ -273,3 +273,4 @@ input::placeholder {
     font-size: 42px;
   }
 }
+
