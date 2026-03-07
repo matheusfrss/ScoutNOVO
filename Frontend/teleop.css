@@ -113,6 +113,7 @@ input::placeholder {
    BOLA (BOTÃO PRINCIPAL)
 ============================================ */
 .bubble-btn {
+  touch-action: manipulation;
   width: 160px;
   height: 140px;
   border: none;
