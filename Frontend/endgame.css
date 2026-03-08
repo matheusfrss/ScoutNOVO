@@ -312,3 +312,40 @@ textarea{
 body{
   touch-action: manipulation;
 }
+
+.fuel-section{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.fuel-container{
+  display:flex;
+  align-items:center;
+  gap:40px;
+}
+
+.fuel-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.fuel-icon{
+  width:250px;
+}
+
+.fuel-count{
+  color:white;
+  padding:6px 25px;
+  border-radius:4px;
+  font-weight:bold;
+}
+
+.red{
+  background:#ff1f2f;
+}
+
+.blue{
+  background:#1f6bff;
+}
