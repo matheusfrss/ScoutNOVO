@@ -1,6 +1,6 @@
 # 📊 ScoutNOVO - Sistema de Análise e Coleta de Dados
 
-Sistema completo para coleta, processamento e análise de dados, desenvolvido com backend em Python e deploy em nuvem, focado em automação e organização de informações.
+Sistema completo para analises dos robos dentro da arena, processando e análisando dados, desenvolvido com backend em Python e deploy em nuvem, focado em automação e organização de informações.
 
 ---
 
@@ -57,7 +57,7 @@ O backend da aplicação foi publicado utilizando o **Render**, permitindo acess
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/4f066318-9ed6-4c8d-b0bb-9769d47af21a" width="300"/>
-  <img width="1646" height="888" alt="image" src="https://github.com/user-attachments/assets/1db9c846-5ce1-46ca-8b1d-b77a43149c78" />
+  <img width="300" alt="image" src="https://github.com/user-attachments/assets/1db9c846-5ce1-46ca-8b1d-b77a43149c78" />
 </p>
 
 ---
