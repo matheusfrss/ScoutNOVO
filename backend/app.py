@@ -6,6 +6,12 @@ from dotenv import load_dotenv
 import json
 import traceback
 
+from tba_service import (
+    calculate_scout_score,
+    get_rankings,
+    get_oprs
+)
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -66,26 +72,16 @@ def salvar_robo():
                 "mensagem": "JSON vazio"
             }), 400
 
-
         basic = dados.get("basic", {})
         auto = dados.get("auto", {})
         teleop = dados.get("teleop", {})
         endgame = dados.get("endgame", {})
-
 
         if not basic.get("matchNumber") or not basic.get("teamNumber"):
             return jsonify({
                 "status": "erro",
                 "mensagem": "matchNumber ou teamNumber ausente"
             }), 400
-
-
-        if not SUPABASE_URL or not SUPABASE_KEY:
-            return jsonify({
-                "status": "erro",
-                "mensagem": "Supabase não configurado"
-            }), 500
-
 
         payload = {
 
@@ -103,7 +99,6 @@ def salvar_robo():
             "dados_json": dados
         }
 
-
         headers = {
             "apikey": SUPABASE_KEY,
             "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -111,9 +106,7 @@ def salvar_robo():
             "Prefer": "return=representation"
         }
 
-
         url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}"
-
 
         response = requests.post(
             url,
@@ -122,10 +115,8 @@ def salvar_robo():
             timeout=10
         )
 
-
         print("📨 Supabase status:", response.status_code)
         print(response.text)
-
 
         if response.status_code in (200, 201):
 
@@ -134,13 +125,11 @@ def salvar_robo():
                 "mensagem": "Scouting salvo com sucesso!"
             })
 
-
         return jsonify({
             "status": "erro",
             "mensagem": "Falha ao salvar no Supabase",
             "detalhes": response.text
         }), 500
-
 
     except Exception:
 
@@ -151,7 +140,6 @@ def salvar_robo():
             "status": "erro",
             "mensagem": "Erro interno no servidor"
         }), 500
-
 
 # ======================
 # RESET COMPETIÇÃO
@@ -165,34 +153,27 @@ def reset_competicao():
         data = request.get_json(silent=True) or {}
         senha = data.get("senha")
 
-        if not ADMIN_PASSWORD:
-            return jsonify({
-                "status": "erro",
-                "mensagem": "ADMIN_PASSWORD não configurado"
-            }), 500
-
-
         if senha != ADMIN_PASSWORD:
+
             return jsonify({
                 "status": "erro",
                 "mensagem": "Senha incorreta"
             }), 403
-
 
         headers = {
             "apikey": SUPABASE_KEY,
             "Authorization": f"Bearer {SUPABASE_KEY}"
         }
 
-
         url = f"{SUPABASE_URL}/rest/v1/{TABLE_NAME}?num_partida=gt.0"
 
-
-        response = requests.delete(url, headers=headers, timeout=10)
-
+        response = requests.delete(
+            url,
+            headers=headers,
+            timeout=10
+        )
 
         print("🧹 Reset status:", response.status_code)
-
 
         if response.status_code in (200, 204):
 
@@ -201,13 +182,11 @@ def reset_competicao():
                 "mensagem": "Competição resetada"
             })
 
-
         return jsonify({
             "status": "erro",
             "mensagem": "Falha ao resetar",
             "detalhes": response.text
         }), 500
-
 
     except Exception:
 
@@ -218,7 +197,6 @@ def reset_competicao():
             "mensagem": "Erro interno"
         }), 500
 
-
 # ======================
 # TESTE API
 # ======================
@@ -228,9 +206,8 @@ def teste():
 
     return jsonify({
         "status": "ok",
-        "mensagem": "API Flask funcionando VERSAO NOVA 2026"
+        "mensagem": "API Flask funcionando"
     })
-
 
 # ======================
 # HOME
@@ -244,6 +221,76 @@ def home():
         "mensagem": "ScoutNOVO API online 🚀"
     })
 
+# ======================
+# OPRS
+# ======================
+
+@app.route("/oprs")
+def oprs():
+
+    data = get_oprs("2026brsp")
+
+    return jsonify(data)
+
+# ======================
+# RANKINGS IA
+# ======================
+
+@app.route("/rankings")
+def rankings():
+
+    try:
+
+        data = get_rankings("2026brsp")
+
+        print("=" * 50)
+        print("RANKINGS API:")
+        print(data)
+        print("=" * 50)
+
+        # Proteção caso API falhe
+        if "rankings" not in data:
+
+            return jsonify({
+                "rankings": []
+            })
+
+        opr_data = get_oprs("2026brsp")
+
+        oprs = opr_data.get("oprs", {})
+
+        rankings_list = data["rankings"]
+
+        for team in rankings_list:
+
+            team_key = team.get("team_key", "")
+
+            opr = oprs.get(team_key, 0)
+
+            team["opr"] = round(opr, 2)
+
+            team["scout_score"] = calculate_scout_score(
+                team,
+                opr
+            )
+
+        rankings_list.sort(
+            key=lambda x: x["scout_score"],
+            reverse=True
+        )
+
+        return jsonify({
+            "rankings": rankings_list
+        })
+
+    except Exception:
+
+        print("ERRO RANKINGS:")
+        print(traceback.format_exc())
+
+        return jsonify({
+            "rankings": []
+        })
 
 # ======================
 # RUN LOCAL
